@@ -8,7 +8,6 @@ namespace SiliconBackOffice.Services
     public class NewsletterService
     {
         private readonly HttpClient _http;
-        private const string BaseUrl = "https://subscriptionprovider-silicon.azurewebsites.net/api/";
 
         public NewsletterService(HttpClient http)
         {
@@ -19,7 +18,7 @@ namespace SiliconBackOffice.Services
         {
             try
             {
-                var result = await _http.GetAsync(BaseUrl + "GetSubscribersFunction?code=VdUem1ardDpuXjfbHNodWR6NRuTneq6ZTFo3n_8r7fHZAzFutbdzXA==");
+                var result = await _http.GetAsync("https://newsletterprovider-bmfl.azurewebsites.net/api/getsubscriber?code=tPCFhF1FQuVYEQYn83tYTYUyYadZjTh6C2dhPSRKUFhLAzFuqRMTVw%3D%3D");
                 if (result.IsSuccessStatusCode)
                 {
                     return await result.Content.ReadFromJsonAsync<IEnumerable<NewsletterModel>>() ?? Enumerable.Empty<NewsletterModel>();
@@ -36,9 +35,7 @@ namespace SiliconBackOffice.Services
         {
             try
             {
-                var requestData = new { Email = email };
-                var content = new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/json");
-                var result = await _http.PostAsync(BaseUrl + "GetSubscribersFunction?code=VdUem1ardDpuXjfbHNodWR6NRuTneq6ZTFo3n_8r7fHZAzFutbdzXA==", content);
+                var result = await _http.GetAsync($"https://newsletterprovider-bmfl.azurewebsites.net/api/getsubscriber?code=tPCFhF1FQuVYEQYn83tYTYUyYadZjTh6C2dhPSRKUFhLAzFuqRMTVw%3D%3D&email={email}");
                 if (result.IsSuccessStatusCode)
                 {
                     return await result.Content.ReadFromJsonAsync<NewsletterModel>() ?? throw new InvalidOperationException("Failed to deserialize response.");
@@ -56,12 +53,25 @@ namespace SiliconBackOffice.Services
             try
             {
                 var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-                var result = await _http.PostAsync(BaseUrl + "UpdateSubscriberFunction?code=bdOaYycwsJU9tdvHb_O_8pnk56JT8VFcZ7QpqqTrp5pRAzFuV3OoQQ==", content);
+                var result = await _http.PostAsync("https://newsletterprovider-bmfl.azurewebsites.net/api/Subscribe?code=jYf27X54n1bcCN5_hkPi-bEE5pcSX2kp_Uiplh0QDiUsAzFuZanPRg%3D%3D", content);
                 return result.IsSuccessStatusCode;
             }
             catch (Exception ex)
-            {   
+            {
                 throw new ApplicationException("Failed to update subscriber", ex);
+            }
+        }
+
+        public async Task<bool> UnsubscribeAsync(string email)
+        {
+            try
+            {
+                var result = await _http.PostAsync($"https://newsletterprovider-bmfl.azurewebsites.net/api/Unsubscribe?code=nf9P6RZL4OXjbD3jR7W5dfIUVFwH4UlJK0Fb3RglfPAbAzFuOdFs1A%3D%3D&email={email}", null);
+                return result.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Failed to unsubscribe: {email}", ex);
             }
         }
     }
