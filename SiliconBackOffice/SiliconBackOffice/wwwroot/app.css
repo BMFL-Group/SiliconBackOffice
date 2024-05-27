@@ -929,6 +929,9 @@ h6, .h6 {
   gap: 1rem;
 }
 
+    .courses .container .course-form {
+        grid-area: course-form;
+    }*/
 html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

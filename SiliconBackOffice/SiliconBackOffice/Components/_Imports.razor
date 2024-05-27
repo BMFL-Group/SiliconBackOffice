@@ -28,6 +28,8 @@
 
 @* -----------------------Account------------------------------------- @
 
+@* -----------------------Account------------------------------------- @
+
 @using SiliconBackOffice.Components.Account
 @using SiliconBackOffice.Components.Account.Pages
 @using SiliconBackOffice.Components.Pages.Partials.AuthPartials
@@ -43,6 +45,9 @@
 
 @ -----------------------Courses------------------------------------- @
 
+
+@ -----------------------Courses------------------------------------- @
+
 @using Services
 @ @using Pages
 @using Components.Pages.Partials
@@ -50,8 +55,10 @@
 @using SiliconBackOffice.Models.Courses
 @using SiliconBackOffice.Components.Pages.Partials.Courses
 @using SiliconBackOffice.Services
-
+@using SiliconBackOffice.Models.SavedCourses
 
 @inject CourseService _courseService
 @inject NavigationManager navigationManager
-@* @inject SavedCoursesService _savedCoursesService *@
+
+
+@inject SavedCoursesService _savedCoursesService
