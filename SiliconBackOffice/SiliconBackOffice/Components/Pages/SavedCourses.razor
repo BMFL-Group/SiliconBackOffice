@@ -24,10 +24,14 @@ else
                     <div class="form-group-saved-courses-id">
                         <label id="user-id-label">User Id</label>
                         <InputText @bind-Value="course.UserId" id="user-id-input" />
+                        <label id="user-id-label">User Name</label>
+                        <InputText @bind-Value="course.UserId" id="user-id-input" />
                     </div>
                     <div class="form-group-saved-courses-id">
                         <label id="course-id-label">Course Id</label>
                         <InputText @bind-Value="course.CourseId" id="course-id-input" />
+                        <label id="course-id-label">Course Name</label>
+                        <InputText @bind-Value="_course.Title" id="course-id-input" />
                     </div>
                     <div class="form-group-saved-courses">
                         <label id="bookmark-lable">Bookmarked</label>
@@ -47,8 +51,12 @@ else
 @code {
     public IEnumerable<SavedCoursesModel>? _savedCourses { get; set; }
 
+    public Course? _course { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         _savedCourses = await _savedCoursesService.GetSavedCoursesAsync("ed628e1f-d322-49ec-b617-77ed7f022694");
+        _course = await _courseService.GetOneCourseByIdAsync("");
+
     }
 }
