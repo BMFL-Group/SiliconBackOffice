@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiliconBackOffice", "SiliconBackOffice\SiliconBackOffice\SiliconBackOffice.csproj", "{03C55B45-3046-4F5B-BA49-FE8E50C9009F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiliconBackOffice", "SiliconBackOffice\SiliconBackOffice\SiliconBackOffice.csproj", "{03C55B45-3046-4F5B-BA49-FE8E50C9009F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiliconBackOffice.Client", "SiliconBackOffice\SiliconBackOffice.Client\SiliconBackOffice.Client.csproj", "{C041FBB4-68B0-4877-BD4A-4F577077D722}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiliconBackOffice.Client", "SiliconBackOffice\SiliconBackOffice.Client\SiliconBackOffice.Client.csproj", "{C041FBB4-68B0-4877-BD4A-4F577077D722}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,218 @@
+﻿<div class="course-form">
+    <div>Edit Course Content</div>
+
+    @if (_course == null)
+    {
+        <div>null</div>
+    }
+    else
+    {
+        <EditForm FormName="EditCourse" Model="_course" class="form-control courses-form">
+            <ChildContent>
+                <div class="form-group">
+                    <label>Id</label>
+                    <InputText @bind-Value="_course.Id" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <InputText @bind-Value="_course.Title" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Ingress</label>
+                    <InputText @bind-Value="_course.Ingress" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>ImageUri</label>
+                    <InputText @bind-Value="_course.ImageUri" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>AltText</label>
+                    <InputText @bind-Value="_course.AltText" class="form-control" />
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="checkbox-wrapper">
+                    <div class="checkbox-group">
+                        <label>BestSeller</label>
+                        <InputCheckbox @bind-Value="_course.BestSeller" />
+                    </div>
+                    <div class="checkbox-group">
+                        <label>IsDigital</label>
+                        <InputCheckbox @bind-Value="_course.IsDigital" />
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                @if (_course.Categories != null)
+                {
+                    <div class="categories-group">
+                        @for (int i = 0; i < _course.Categories.Length; i++)
+                        {
+                            <div class="form-group">
+                                <label>Category @i</label>
+                                <InputText @bind-Value="_course.Categories[i]" class="form-control" />
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="divider"></div>
+
+                <div class="price-wrapper">
+                    <div class="form-group">
+                        <label>Currency</label>
+                        <InputText @bind-Value="_course.Currency" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <InputNumber @bind-Value="_course.Price" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <InputNumber @bind-Value="_course.DiscountPrice" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="misc-wrapper">
+                    <div class="form-group">
+                        <label>Length in hours</label>
+                        <InputText @bind-Value="_course.LengthInHours" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ratings in percentage</label>
+                        <InputNumber @bind-Value="_course.RatingInPercentage" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Number of reviews</label>
+                        <InputNumber @bind-Value="_course.NumberOfReviews" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Number of likes</label>
+                        <InputNumber @bind-Value="_course.NumberOfLikes" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                @if (_course.Authors != null)
+                {
+                    <div class="authors-group">
+                        <div class="form-group">
+                            @foreach (var author in _course.Authors)
+                            {
+                                <label>Author</label>
+                                <InputText @bind-Value="author.Name" class="form-control" />
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="divider"></div>
+
+                @if (_course.Content != null)
+                {
+                    <div class="content-group">
+                            <div class="form-group">
+                                <label>Content Description</label>
+                                <InputText @bind-Value="_course.Content.Description" class="form-control" />
+                            </div>
+
+                            @if (_course.Content.Courseincludes != null)
+                            {
+                                <div class="categories-group">
+                                    @for (int i = 0; i < _course.Content.Courseincludes.Length; i++)
+                                    {
+                                        <div class="form-group">
+                                            <label>Course includes @i</label>
+                                            <InputText @bind-Value="_course.Content.Courseincludes[i]" class="form-control" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            <div class="divider"></div>
+
+                            @if (_course.Content.WhatYouLearn != null)
+                            {
+                                <div class="categories-group">
+                                    @for (int i = 0; i < _course.Content.WhatYouLearn.Length; i++)
+                                    {
+                                        <div class="form-group">
+                                            <label>What you learn @i</label>
+                                            <InputText @bind-Value="_course.Content.WhatYouLearn[i]" class="form-control" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                        <div class="divider"></div>
+
+                        @if (_course.Content.ProgramDetails != null)
+                        {
+                            foreach (var programDetail in _course.Content.ProgramDetails)
+                            {
+                                <div class="program-details-group">
+                                    <div class="form-group">
+                                        <label>ProgramDetails Id</label>
+                                        <InputNumber @bind-Value="programDetail.Id" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Sub heading</label>
+                                        <InputText @bind-Value="programDetail.Title" class="form-control" />
+                                    </div>
+                                </div>
+
+                                @if (programDetail.Description != null)
+                                {
+                                    <div class="categories-group">
+                                        @for (int i = 0; i < programDetail.Description.Length; i++)
+                                        {
+                                            var inputId = (programDetail.Id).ToString();
+                                            <div class="form-group">
+                                                <label>Sub heading for description @inputId</label>
+                                                <InputText @bind-Value="programDetail.Description[i]" class="form-control" />
+                                            </div>
+                                        }
+                                    </div>
+                                }
+    
+                            }
+                        }
+                    </div>
+                }
+                <button @onclick=" () => HandleSubmit(_course)">Save Course</button>
+                <button type="reset">Cancel</button>
+
+
+            </ChildContent>
+
+
+        </EditForm>
+    }
+</div>
+
+<div style="height: 500px;"></div>
+
+@code {
+    [Parameter]
+    public Course? _course { get; set; }
+
+    private async Task HandleSubmit(Course course)
+    {
+        var iseExistingCourse = await _courseService.GetOneCourseByIdAsync(course.Id);
+        if (iseExistingCourse != null)
+        {
+            var updatedCourse = await _courseService.UpdateOneCourseAsync(course);
+            //maybe sort out function to update the   
+        }
+        else
+        {
+            var newCourse = await _courseService.CreateOneCourseAsync(course);
+        }
+
+    }
+}

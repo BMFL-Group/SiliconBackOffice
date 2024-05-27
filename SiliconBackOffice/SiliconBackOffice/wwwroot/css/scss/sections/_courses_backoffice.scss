@@ -1,0 +1,235 @@
+﻿.courses {
+    .container-test {
+        margin: 0 1rem;
+        display: grid;
+        grid-template-columns: auto 1fr 1fr;
+        grid-template-areas:
+            'main-text main-text main-text'
+            'course-box course-form course-form'
+            'aside course-form course-form'
+            '. course-form course-form'
+            '. course-form course-form';
+        gap: 2rem 10rem;
+
+        .text-center {
+            grid-area: main-text;
+        }
+
+        .courses-aside {
+            grid-area: aside;
+        }
+
+        .grid-item {
+            grid-area: course-box;
+        }
+
+        .course-form {
+            grid-area: course-form;
+        }
+
+        .grid-item {
+            position: relative;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            text-decoration: none;
+            z-index: 2;
+            transition: all 0.15s ease-out;
+
+
+            &:hover {
+                transform: scale(101%, 101%);
+                transition: all 0.3s ease-in;
+            }
+
+            &:active {
+                transform: scale(99%, 99%);
+                transition: all 0.3s ease-in;
+            }
+
+            .img-wrapper {
+                .course-image {
+                    width: 100%;
+                    height: auto;
+                    aspect-ratio: 3.5 /2;
+                    object-fit: cover;
+                }
+
+                .best-seller {
+                    @include course-button;
+                    position: absolute;
+                    top: 1rem;
+                    left: 1rem;
+                }
+            }
+
+            .bookmark-circle {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                z-index: 1000;
+                background-color: var(--color-white);
+                border: 1px solid var(--color-gray-400);
+                border-radius: 100%;
+                padding: 1rem;
+                cursor: pointer;
+
+                .fa-bookmark {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: var(--color-black);
+                }
+            }
+
+            .course-enrolled {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-color: var(--color-success);
+                padding: 0.5rem 3rem;
+                margin: 1rem -3rem;
+                transform: rotateZ(315deg);
+                //border-radius: 0.2rem;
+
+                span {
+                    padding: 0.2rem;
+                    color: white;
+                }
+            }
+
+
+            .text-wrapper {
+                display: grid;
+                grid-template-rows: 1.2fr 2fr;
+                grid-template-areas: 'title' 'rest';
+                background-color: var(--color-gray-000);
+                padding: 0.5rem;
+
+                .text-title {
+                    grid-area: title;
+                }
+
+                .text-rest {
+                    grid-area: rest;
+
+                    span {
+                        color: var(--color-gray-900);
+                    }
+
+                    .by {
+                        margin-right: 0.2rem;
+                    }
+
+                    .price-wrapper {
+                        display: flex;
+                        gap: 1rem;
+                        margin: 0.5rem 0;
+
+                        .price {
+                            @include h5;
+                            color: var(--color-theme);
+                        }
+
+                        .discount-applied {
+                            text-decoration-line: line-through;
+                        }
+
+                        .discount-price {
+                            @include h5;
+                            color: var(--color-danger);
+                        }
+                    }
+
+                    .divider {
+                        width: 100%;
+                        height: 1px;
+                        background-color: var(--color-gray-300);
+                        margin-bottom: 1rem;
+                    }
+
+                    .description-wrapper {
+                        margin-bottom: 0.5rem;
+
+                        span {
+                            margin: 0 1rem 0 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        .courses-form {
+            background: var(--color-gray-200);
+            padding: 2rem;
+
+            .form-group {
+                margin: 0.5rem 0;
+
+                label {
+                    @include h6;
+                    margin: 0.5rem 0;
+                }
+            }
+
+            .checkbox-wrapper {
+                margin: 2rem 0;
+                display: flex;
+
+                .checkbox-group {
+                    margin: 0 2rem 0 0;
+                }
+            }
+
+            .categories-group {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 1rem;
+
+                .form-group {
+                    margin: 0;
+                }
+            }
+
+            .price-wrapper {
+                display: flex;
+                gap: 0 1rem;
+            }
+
+            .misc-wrapper {
+                display: flex;
+                gap: 0 1rem;
+            }
+
+            .authors-group {
+                display: flex;
+                gap: 0.5rem 0;
+            }
+
+            .content-group {
+                .program-details-group {
+                    display: flex;
+                }
+            }
+        }
+    }
+}
+
+/*    .courses .container .text-center {
+        grid-area: main-text;
+    }
+
+    .courses .container .courses-aside {
+        grid-area: aside;
+    }
+
+    .courses .container .grid-item {
+        grid-area: courses-content;
+    }
+
+    .courses .container .course-form {
+        grid-area: course-form;
+    }*/
