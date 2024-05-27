@@ -874,6 +874,13 @@ h6, .h6 {
 .courses .container .grid-item .text-wrapper .text-rest .description-wrapper span {
   margin: 0 1rem 0 0;
 }
+.courses .container .courses-form {
+  background: var(--color-gray-200);
+  padding: 2rem;
+}
+.courses .container .courses-form .form-group {
+  margin: 1rem 0;
+}
 
 /*    .courses .container .text-center {
         grid-area: main-text;

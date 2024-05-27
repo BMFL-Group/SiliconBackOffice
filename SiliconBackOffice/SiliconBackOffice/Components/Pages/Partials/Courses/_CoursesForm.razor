@@ -1,5 +1,5 @@
 ﻿<div class="course-form">
-    <div>Course Form blabla</div>
+    <div>Edit Course Content</div>
 </div>
 
 @if (_course == null)
@@ -8,9 +8,61 @@
 }
 else
 {
-    <EditForm FormName="EditCourse" Model="_course">
+    <EditForm FormName="EditCourse" Model="_course" class="form-control courses-form">
         <ChildContent>
+            <div class="form-group">
+                <label>Id</label>
+                <InputText @bind-Value="_course.Id" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <InputText @bind-Value="_course.Title" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Ingress</label>
+                <InputText @bind-Value="_course.Ingress" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>ImageUri</label>
+                <InputText @bind-Value="_course.ImageUri" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>AltText</label>
+                <InputText @bind-Value="_course.AltText" class="form-control" />
+            </div>
+            <div class="checkbox-group">
+                <label>BestSeller</label>
+                <InputCheckbox @bind-Value="_course.BestSeller" />
+            </div>
+            <div class="checkbox-group">
+                <label>IsDigital</label>
+                <InputCheckbox @bind-Value="_course.IsDigital" />
+            </div>
+
+            @if(_course.Categories != null)
+            {
+                @for (int i = 0; i < _course.Categories.Length; i++)
+                {
+                    <div class="form-group">
+                        <label>Category @i</label>
+                        <InputText @bind-Value="_course.Categories[i]" class="form-control" />
+                    </div>
+                }                
+            }
+
+@*             <InputText @bind-Value="_course.Title" />
+
             <InputText @bind-Value="_course.Title" />
+            <InputText @bind-Value="_course.Title" />
+
+            <InputText @bind-Value="_course.Title" />
+
+            <InputText @bind-Value="_course.Title" />
+            <InputText @bind-Value="_course.Title" />
+            <InputText @bind-Value="_course.Title" /> *@
+
+
+
             
 
         </ChildContent>

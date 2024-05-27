@@ -159,6 +159,15 @@
                 }
             }
         }
+
+        .courses-form {
+            background: var(--color-gray-200);
+            padding: 2rem;
+
+            .form-group {
+                margin: 1rem 0;
+            }
+        }
     }
 }
 
