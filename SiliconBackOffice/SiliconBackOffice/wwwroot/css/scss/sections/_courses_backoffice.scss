@@ -1,10 +1,14 @@
 ﻿.courses {
-    .container {
+    .container-test {
+        margin: 0 1rem;
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto 1fr 1fr;
         grid-template-areas:
-            'main-text main-text' 'aside courses-content' 'course-form course-form';
-
+            'main-text main-text main-text'
+            'course-box course-form course-form'
+            'aside course-form course-form'
+            '. course-form course-form'
+            '. course-form course-form';
         gap: 2rem 10rem;
 
         .text-center {
@@ -16,14 +20,12 @@
         }
 
         .grid-item {
-            grid-area: courses-content;
+            grid-area: course-box;
         }
-
 
         .course-form {
             grid-area: course-form;
         }
-        
 
         .grid-item {
             position: relative;
@@ -165,7 +167,52 @@
             padding: 2rem;
 
             .form-group {
-                margin: 1rem 0;
+                margin: 0.5rem 0;
+
+                label {
+                    @include h6;
+                    margin: 0.5rem 0;
+                }
+            }
+
+            .checkbox-wrapper {
+                margin: 2rem 0;
+                display: flex;
+
+                .checkbox-group {
+                    margin: 0 2rem 0 0;
+                }
+            }
+
+            .categories-group {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 1rem;
+
+                .form-group {
+                    margin: 0;
+                }
+            }
+
+            .price-wrapper {
+                display: flex;
+                gap: 0 1rem;
+            }
+
+            .misc-wrapper {
+                display: flex;
+                gap: 0 1rem;
+            }
+
+            .authors-group {
+                display: flex;
+                gap: 0.5rem 0;
+            }
+
+            .content-group {
+                .program-details-group {
+                    display: flex;
+                }
             }
         }
     }

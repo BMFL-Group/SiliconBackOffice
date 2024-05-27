@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SiliconBackOffice.Components.Pages;
 using SiliconBackOffice.Models.Courses;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SiliconBackOffice.Services;
 
@@ -166,4 +167,89 @@ public class CourseService
         catch (Exception ex) { }
         return null!;
     }
+
+    public async Task<Course> CreateOneCourseAsync(Course course)
+    {
+        return new Course();
+
+    }
+
+
+    public async Task<Course> UpdateOneCourseAsync(Course course)
+    {
+        try
+        {
+            #region GRAPHQL QUERY
+            var query = new
+            {
+                query = @"
+                mutation ($request: CourseUpdateRequestInput!) {
+                    updateCourse(request: $request) {
+                        id
+                        title
+                    }
+                }",
+                variables = new
+                {
+                    request = new
+                    {
+                        id = course.Id,
+                        title = course.Title,
+                        ingress = course.Ingress,
+                        imageUri = course.ImageUri,
+                        altText = course.AltText,
+                        bestSeller = course.BestSeller,
+                        isDigital = course.IsDigital,
+                        categories = course.Categories,
+                        currency = course.Currency,
+                        price = course.Price,
+                        discountPrice = course.DiscountPrice,
+                        lengthInHours = course.LengthInHours,
+                        ratingInPercentage = course.RatingInPercentage,
+                        numberOfReviews = course.NumberOfReviews,
+                        numberOfLikes = course.NumberOfLikes,
+                        authors = course.Authors.Select(a => new { name = a.Name }).ToArray(),
+                        content = new
+                        {
+                            description = course.Content.Description,
+                            courseIncludes = course.Content.Courseincludes,
+                            whatYouLearn = course.Content.WhatYouLearn,
+                            programDetails = course.Content.ProgramDetails.Select(pd => new
+                            {
+                                id = pd.Id,
+                                title = pd.Title,
+                                description = pd.Description
+                            }).ToArray()
+                        }
+                    }
+                }
+            };
+
+            var queryJson = JsonConvert.SerializeObject(query);
+            var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
+
+            var updateCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlBackEnd"]}", content);
+            if (updateCourseResponse.IsSuccessStatusCode)
+            {
+                var json = await updateCourseResponse.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<GraphQLResponse>(json);
+                if (result != null && result.Data != null && result.Data.GetCourseById != null)
+                {
+                    Course resultCourse = result.Data.GetCourseById;
+                    if (resultCourse != null)
+                    {
+                        return resultCourse;
+                    }
+                }
+            }
+            #endregion
+        }
+        catch (Exception ex) { }
+        return null!;
+    }
+
+    //public async Task<bool> IsExistingCourse(string id)
+    //{
+    //    return true;
+    //}
 }

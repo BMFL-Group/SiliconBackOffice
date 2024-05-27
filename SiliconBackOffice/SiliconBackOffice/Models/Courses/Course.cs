@@ -32,6 +32,7 @@ public class Content
 {
     public string? Description { get; set; }
     public string[]? Courseincludes { get; set; }
+    public string[]? WhatYouLearn { get; set; }
     public virtual List<ProgramDetails>? ProgramDetails { get; set; }
 }
 
