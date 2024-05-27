@@ -15,13 +15,13 @@ public class SavedCoursesService
         _configuration = configuration;
     }
 
-    public async Task<IEnumerable<SavedCourses>> GetSavedCoursesAsync(string userId)
+    public async Task<IEnumerable<SavedCoursesModel>> GetSavedCoursesAsync(string userId)
     {
         try
         {
-            var response = await _httpClient.GetAsync($"{_configuration.GetConnectionString("SavedCoursesApi")}api/savedcourses/{userId}");
+            var response = await _httpClient.GetAsync($"{_configuration.GetConnectionString("LocalSavedCoursesApi")}api/SavedCourses/user{userId}");
             var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<IEnumerable<SavedCourses>>(json);
+            var result = JsonConvert.DeserializeObject<IEnumerable<SavedCoursesModel>>(json);
             if (result != null && result.Any())
             {
                 return result;

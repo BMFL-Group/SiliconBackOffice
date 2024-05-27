@@ -1,6 +1,6 @@
 ﻿namespace SiliconBackOffice.Models.SavedCourses;
 
-public class SavedCourses
+public class SavedCoursesModel
 {
     public string CourseId { get; set; } = null!;
     public string UserId { get; set; } = null!;
