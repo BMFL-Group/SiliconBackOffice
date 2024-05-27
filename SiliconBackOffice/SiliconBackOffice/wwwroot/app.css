@@ -943,6 +943,12 @@ h6, .h6 {
     .courses .container .course-form {
         grid-area: course-form;
     }*/
+.saved-courses .container .saved-items-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

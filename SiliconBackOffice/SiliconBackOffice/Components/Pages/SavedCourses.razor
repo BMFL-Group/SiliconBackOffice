@@ -1,0 +1,58 @@
+﻿@page "/savedCourses"
+
+
+
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+
+<PageTitle>Saved Courses</PageTitle>
+
+<section class="saved-courses">
+    <div class="container">
+        <div class="saved-items-heading">
+            <h1>Saved Items</h1>
+            <button class="btn-delete-all"><i class="fa-regular fa-trash-can"></i> Delete all</button>
+        </div>
+       
+
+        @if(_savedCourses == null)
+        {
+            <div>Loading...</div>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course Id</th>
+                        <th>Bookmarked</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in _savedCourses)
+                    {
+                        <tr>
+                           @*  <td>@course.CourseId</td>
+                            <td>@course.IsBookmarked</td>
+                            <td>@course.HasJoined</td> *@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    </div>
+
+
+</section>
+
+@code {
+    public IEnumerable<SavedCourses>? _savedCourses { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _savedCourses = await _savedCoursesService.GetSavedCoursesAsync("ed628e1f-d322-49ec-b617-77ed7f022694");
+    }
+}
