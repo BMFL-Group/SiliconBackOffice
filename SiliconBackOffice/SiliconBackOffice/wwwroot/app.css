@@ -929,9 +929,55 @@ h6, .h6 {
   gap: 1rem;
 }
 
-    .courses .container .course-form {
-        grid-area: course-form;
-    }*/
+.saved-courses-form {
+  background-color: var(--color-gray-300);
+}
+.saved-courses-form .form-wrapper-saved-courses {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  grid-gap: 1rem;
+  grid-template-areas: "user-id-label course-id-label bookmark-label bookmark-input has-joined-label has-joined-input" "user-id-input course-id-input  ";
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id {
+  display: flex;
+  flex-direction: column;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id label {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id input {
+  border-radius: 0.25rem;
+  width: 65%;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #user-id-label {
+  grid-area: user-id-label;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #user-id-input {
+  grid-area: user-id;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #course-id-label {
+  grid-area: course-id-label;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #course-id-input {
+  grid-area: course-id-input;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #bookmark-lable {
+  grid-area: bookmark-lable;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #bookmark-input {
+  grid-area: bookmark-input;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #has-joined-label {
+  grid-area: has-joined-label;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #has-joined-input {
+  grid-area: has-joined-input;
+}
+
 html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

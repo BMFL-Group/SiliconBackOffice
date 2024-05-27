@@ -19,7 +19,7 @@ public class SavedCoursesService
     {
         try
         {
-            var response = await _httpClient.GetAsync($"{_configuration.GetConnectionString("LocalSavedCoursesApi")}api/SavedCourses/user{userId}");
+            var response = await _httpClient.GetAsync($"{_configuration.GetConnectionString("SavedCoursesApi")}api/SavedCourses/user/{userId}");
             var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IEnumerable<SavedCoursesModel>>(json);
             if (result != null && result.Any())

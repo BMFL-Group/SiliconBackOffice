@@ -1,9 +1,62 @@
-.saved-courses {
-    .container {
-        .saved-items-heading {
+.saved-courses-form {
+    background-color: var(--color-gray-300);
+
+    .form-wrapper-saved-courses {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto auto;
+        grid-gap: 1rem;
+        grid-template-areas:
+            "user-id-label course-id-label bookmark-label bookmark-input has-joined-label has-joined-input" "user-id-input course-id-input  ";
+
+        .form-group-saved-courses-id {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+
+            label {
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+            input {
+                border-radius: 0.25rem;
+                width: 65%;
+                margin-bottom: 0.5rem;
+                text-align: center;
+                padding: 0.5rem;
+            }
+
+
+            #user-id-label {
+                grid-area: user-id-label;
+            }
+
+            #user-id-input {
+                grid-area: user-id;
+            }
+
+            #course-id-label {
+                grid-area: course-id-label;
+            }
+
+            #course-id-input {
+                grid-area: course-id-input;
+            }
+
+            #bookmark-lable {
+                grid-area: bookmark-lable;
+            }
+
+            #bookmark-input {
+                grid-area: bookmark-input;
+            }
+
+            #has-joined-label {
+                grid-area: has-joined-label;
+            }
+
+            #has-joined-input {
+                grid-area: has-joined-input;
+            }
         }
     }
 }
