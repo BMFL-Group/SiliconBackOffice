@@ -1,4 +1,5 @@
 ﻿@page "/Users"
+@using SiliconBackOffice.Data
 @attribute [StreamRendering]
 
 <PageTitle>Users</PageTitle>
@@ -15,7 +16,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
-                <th scope="col">Role</th>
+                <th scope="col">Roles</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -24,12 +25,12 @@
             {
                 <tr>
                     <td>@user.Id</td>
-                    <td>@user.Username</td>
+                    <td>@user.UserName</td>
                     <td>@user.Email</td>
-                    <td>@user.Role</td>
+                    <td>@(userRoles.ContainsKey(user.Id) ? string.Join(", ", userRoles[user.Id]) : "No Roles")</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" @onclick="() => AssignRole(user)">Assign Role</button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteUser(user)">Delete</button>
+                        <button class="btn btn-sm btn-primary" @onclick="@(async () => await AssignRole(user, "NewRole"))">Assign Role</button>
+                        <button class="btn btn-sm btn-danger" @onclick="@(async () => await DeleteUser(user))">Delete</button>
                     </td>
                 </tr>
             }
@@ -38,31 +39,31 @@
 </div>
 
 @code {
-    private List<User> users = new List<User>
+    private List<ApplicationUser> users = new List<ApplicationUser>();
+    private Dictionary<string, List<string>> userRoles = new Dictionary<string, List<string>>();
+
+    [Inject]
+    private UserService UserService { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        new User { Id = 1, Username = "Lucas", Email = "Lucas@domain.com", Role = "Admin" },
-        new User { Id = 2, Username = "Björn", Email = "Björn@domain.com", Role = "User" },
-        new User { Id = 2, Username = "Fidde", Email = "Fidde@domain.com", Role = "Moderator" },
-        new User { Id = 2, Username = "Martin", Email = "Martin@domain.com", Role = "User" }
-
-    };
-
-    private void AssignRole(User user)
-    {
-
+        users = await UserService.GetUsersAsync();
+        foreach (var user in users)
+        {
+            var roles = await UserService.GetRolesAsync(user);
+            userRoles[user.Id] = new List<string>(roles);
+        }
     }
 
-    private void DeleteUser(User user)
+    private async Task AssignRole(ApplicationUser user, string role)
     {
-
-        users.Remove(user);
+        await UserService.AssignRole(user, role);
+        userRoles[user.Id] = new List<string>(await UserService.GetRolesAsync(user));
     }
 
-    private class User
+    private async Task DeleteUser(ApplicationUser user)
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
+        await UserService.DeleteUser(user);
+        users = await UserService.GetUsersAsync();
     }
 }
