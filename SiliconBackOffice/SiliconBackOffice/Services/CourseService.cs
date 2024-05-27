@@ -21,13 +21,6 @@ public class CourseService
     {
         try
         {
-            // requests = OLDREQUESTS top - local api from asp.net project, bottom - Lucas Api from azure, GRAPHQL - björns api from graphql.
-
-            #region OLD REQUESTS
-            // var allCoursesResponse = await _httpClient.GetAsync($"https://silicon-courses-webapi.azurewebsites.net/api/courses?category={Uri.EscapeDataString(category)}&searchQuery={Uri.EscapeDataString(searchQuery)}&pageNumber={pageNumber}&pageSize={pageSize}&key={_configuration["ApiKey:Secret"]}");
-            //var allCoursesResponse = await _httpClient.GetAsync($"{_configuration["ConnectionStrings:CoursesApi"]}?category={Uri.EscapeDataString(category)}&searchQuery={Uri.EscapeDataString(searchQuery)}&pageNumber={pageNumber}&pageSize={pageSize}&key={_configuration["ApiKey:Secret"]}");
-            #endregion
-
             #region GRAPHQL QUERY
 
             var query = new
@@ -83,8 +76,6 @@ public class CourseService
                 var graphQLResponse = JsonConvert.DeserializeObject<GraphQLResponse>(json);
                 if (graphQLResponse != null && graphQLResponse.Data != null && graphQLResponse.Data.GetCourses != null && graphQLResponse.Data.GetCourses.Pagination != null)
                 {
-                    //return graphQLResponse.Data.Courses;
-
                     return new CourseResult()
                     {
                         Pagination = graphQLResponse.Data.GetCourses.Pagination,
@@ -100,7 +91,6 @@ public class CourseService
             else
             {
                 return new CourseResult();
-                //insert error message here...
             }
 
             #endregion
