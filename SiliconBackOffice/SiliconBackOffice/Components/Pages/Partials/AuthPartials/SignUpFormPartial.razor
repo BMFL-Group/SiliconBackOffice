@@ -1,0 +1,111 @@
+﻿
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="success-message">@SuccessMessage</div>
+}
+else if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="error-message">@ErrorMessage</div>
+}
+
+<EditForm FormName="signupform" Model="SignUpForm" OnValidSubmit="OnValidSubmit" novalidate>
+    <DataAnnotationsValidator />
+    <div class="name">
+        <div id="form-firstName" class="input-group">
+            <label for="FirstName">First Name</label>
+            <InputText @bind-Value="SignUpForm.FirstName" id="FirstName" placeholder="Enter your first name" />
+            <ValidationMessage For="() => SignUpForm.FirstName" />
+        </div>
+        <div id="form-lastName" class="input-group">
+            <label for="LastName">Last Name</label>
+            <InputText id="LastName" @bind-Value="SignUpForm.LastName" placeholder="Enter your last name" />
+            <ValidationMessage For="() => SignUpForm.LastName" />
+        </div>
+    </div>
+    <div id="form-email" class="input-group">
+        <label for="Email">Email address</label>
+        <InputText type="email" id="Email" @bind-Value="SignUpForm.Email" placeholder="Enter your email address" />
+        <ValidationMessage For="() => SignUpForm.Email" />
+    </div>
+    <div id="form-password" class="input-group">
+        <label for="Form.Password">Password</label>
+        <InputText type="password" @bind-Value="SignUpForm.Password" id="Password" placeholder="Enter your password" />
+        <ValidationMessage For="() => SignUpForm.Password" />
+    </div>
+    <div id="form-confirm" class="input-group">
+        <label for="ConfirmPassword">Confirm Password</label>
+        <InputText type="password" @bind-Value="SignUpForm.ConfirmPassword" id="ConfirmPassword" placeholder="Confirm password" />
+        <ValidationMessage For="() => SignUpForm.ConfirmPassword" />
+    </div>
+    <div id="form-terms" class="checkbox-group">
+        <div class="checkbox">
+            <InputCheckbox id="Terms" @bind-Value="SignUpForm.Terms" />
+            <ValidationMessage For="() => SignUpForm.Terms" />
+            <label for="Terms">I agree to the <NavLink href="/"> Terms</NavLink> & <NavLink href="/"> Conditions</NavLink></label>
+        </div>
+    </div>
+    <button type="submit" class="btn-theme">Sign Up</button>
+</EditForm>
+
+@code {
+
+    [SupplyParameterFromForm(Name = "signupform")]
+    private SignUpFormModel SignUpForm { get; set; } = new();
+
+    private string SuccessMessage { get; set; } = "";
+    private string ErrorMessage { get; set; } = "";
+
+    public async Task OnValidSubmit(EditContext editContext)
+    {
+        SuccessMessage = "";
+        ErrorMessage = "";
+
+        var user = new ApplicationUser
+            {
+                FirstName = SignUpForm.FirstName,
+                LastName = SignUpForm.LastName,
+                Email = SignUpForm.Email,
+                UserName = SignUpForm.Email,
+            };
+
+        try
+        {
+            var alreadyInDataBase = await _userManager.FindByEmailAsync(user.Email);
+            if (alreadyInDataBase != null)
+            {
+                ErrorMessage = "User already exists.";
+                return;
+            }
+
+            var result = await _userManager.CreateAsync(user, SignUpForm.Password);
+
+            if (result.Succeeded)
+            {
+                var roleResult = await _userManager.AddToRoleAsync(user, "Admin");
+                if (roleResult.Succeeded)
+                {
+                    SuccessMessage = "Admin added successfully!";
+
+                    var timer = new System.Timers.Timer(2000);
+                    timer.Start();
+                    timer.Elapsed += (s, e) =>
+                    {
+                        navigationManager.NavigateTo("/Account/Login");
+                    };
+                }
+                else
+                {
+                    ErrorMessage = "Unable to register account. Please try again later...";
+                    await _userManager.DeleteAsync(user);
+                    return;
+                }
+            }
+            else
+            {            
+                ErrorMessage = "Unable to register account. Please try again later...";
+                return;
+            }
+        }
+        catch (Exception e) { Debug.WriteLine($"Error creating user ::: {e.Message}"); }
+    }
+}
