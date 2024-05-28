@@ -19,7 +19,7 @@ namespace SiliconBackOffice.Services
 
         public async Task<IEnumerable<NewsletterModel>> GetSubscribersAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://newsletterprovider-bmfl.azurewebsites.net/api/getsubscriber?code=tPCFhF1FQuVYEQYn83tYTYUyYadZjTh6C2dhPSRKUFhLAzFuqRMTVw%3D%3D");
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://newsletterprovider-bmfl.azurewebsites.net/api/GetAllSubscribers?code=cypPgpfvrZfQoBQ4SHZU8_YIoBG3v4U3YSmlG-AQRrrfAzFuUEQ_1w%3D%3D");
             var response = await _http.SendAsync(request);
             if (response.IsSuccessStatusCode)
             {
