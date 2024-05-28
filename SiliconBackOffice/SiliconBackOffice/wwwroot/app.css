@@ -894,6 +894,9 @@ h6, .h6 {
 .courses .container-test .course-form {
   grid-area: course-form;
 }
+.courses .container-test .course-form .load-text {
+  margin: 3rem 0;
+}
 .courses .container-test .grid-item {
   position: relative;
   max-width: 420px;
@@ -1019,8 +1022,11 @@ h6, .h6 {
   margin: 0 1rem 0 0;
 }
 .courses .container-test .courses-form {
-  background: var(--color-gray-200);
+  background: var(--color-gray-300);
   padding: 2rem;
+  /*            what-you-learn {
+
+              }*/
 }
 .courses .container-test .courses-form .form-group {
   margin: 0.5rem 0;
@@ -1042,45 +1048,43 @@ h6, .h6 {
 .courses .container-test .courses-form .checkbox-wrapper .checkbox-group {
   margin: 0 2rem 0 0;
 }
-.courses .container-test .courses-form .categories-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 1rem;
-}
-.courses .container-test .courses-form .categories-group .form-group {
-  margin: 0;
-}
-.courses .container-test .courses-form .price-wrapper {
+.courses .container-test .courses-form .form-wrapper {
+  width: 100%;
   display: flex;
   gap: 0 1rem;
 }
-.courses .container-test .courses-form .misc-wrapper {
-  display: flex;
-  gap: 0 1rem;
+.courses .container-test .courses-form .form-wrapper .form-group {
+  width: 100%;
 }
-.courses .container-test .courses-form .authors-group {
+.courses .container-test .courses-form .input-wrapper {
   display: flex;
   gap: 0.5rem 0;
 }
-.courses .container-test .courses-form .content-group .program-details-group {
-  display: flex;
+.courses .container-test .courses-form .content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0 1rem;
+}
+.courses .container-test .courses-form .program-details-group {
+  display: block;
+  gap: 0 1rem;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr;
+  border-bottom: 1px solid var(--color-gray-500);
+  padding: 0.5rem 0 1rem 0;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper:first-child {
+  border-top: 1px solid var(--color-gray-500);
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper:last-child {
+  margin: 0 0 1rem 0;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper .form-group {
+  margin: 0;
 }
 
-/*    .courses .container .text-center {
-        grid-area: main-text;
-    }
-
-    .courses .container .courses-aside {
-        grid-area: aside;
-    }
-
-    .courses .container .grid-item {
-        grid-area: courses-content;
-    }
-
-    .courses .container .course-form {
-        grid-area: course-form;
-    }*/
 html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

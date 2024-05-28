@@ -1,4 +1,11 @@
-﻿@using System.Net.Http
+@inject UserManager<ApplicationUser> _userManager
+@inject SignInManager<ApplicationUser> _signInManager
+@inject NavigationManager _navigationManager
+@inject IdentityRedirectManager _redirectManager
+@inject IEmailSender<ApplicationUser> _emailSender
+@inject IUserStore<ApplicationUser> _userStore
+@inject ILogger<Register> _logger
+@using System.Net.Http
 @using System.Net.Http.Json
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -15,6 +22,11 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.WebUtilities
+
+@using SiliconBackOffice.Components.Account
+@using SiliconBackOffice.Components.Account.Pages
+@using SiliconBackOffice.Data
+=======
 @using SiliconBackOffice.Data
 
 @* -----------------------Account------------------------------------- *@
@@ -43,18 +55,33 @@
 
 
 
-@* -----------------------Courses------------------------------------- *@
+@* -----------------------Account------------------------------------- @
+
+@using SiliconBackOffice.Components.Account
+@using SiliconBackOffice.Components.Account.Pages
+@using SiliconBackOffice.Components.Pages.Partials.AuthPartials
+
+@inject UserManager<ApplicationUser> _userManager
+@inject SignInManager<ApplicationUser> _signInManager
+@inject NavigationManager _navigationManager
+@inject IdentityRedirectManager _redirectManager
+@inject IEmailSender<ApplicationUser> _emailSender
+@inject IUserStore<ApplicationUser> _userStore
+@inject ILogger<Register> _logger
+
+
+@ -----------------------Courses------------------------------------- @
 
 @using Services
-@* @using Pages
+@ @using Pages
 @using Components.Pages.Partials
 @using Components.Pages.Partials.Courses *@
 @using SiliconBackOffice.Data
 @using SiliconBackOffice.Models.Courses
 @using SiliconBackOffice.Components.Pages.Partials.Courses
-
-
+@using SiliconBackOffice.Services
 
 
 @inject CourseService _courseService
 @inject NavigationManager navigationManager
+@* @inject SavedCoursesService _savedCoursesService *@
