@@ -3,7 +3,7 @@ using System;
 
 #nullable disable
 
-namespace SiliconBackOffice.Migrations
+namespace Sillicon_BlazorApp_IA.Migrations
 {
     /// <inheritdoc />
     public partial class CreateIdentitySchema : Migration
