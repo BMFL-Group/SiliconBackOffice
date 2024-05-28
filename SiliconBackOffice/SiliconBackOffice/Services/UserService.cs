@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SiliconBackOffice.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SiliconBackOffice.Services
 {
@@ -20,30 +24,42 @@ namespace SiliconBackOffice.Services
             return await _userManager.Users.ToListAsync();
         }
 
-        public async Task AssignRole(ApplicationUser user, string role)
+        public async Task<List<string>> GetAllRolesAsync()
         {
-            if (!await _roleManager.RoleExistsAsync(role))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(role));
-            }
-            await _userManager.AddToRoleAsync(user, role);
+            return await _roleManager.Roles.Select(r => r.Name).ToListAsync();
         }
 
-        public async Task RemoveRole(ApplicationUser user, string role)
+        public async Task<bool> UpdateUserRoleAsync(ApplicationUser user, string newRole)
         {
-            if (await _roleManager.RoleExistsAsync(role))
+            // Remove all roles first
+            var roles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, roles);
+
+            // Add the new role
+            if (!await _roleManager.RoleExistsAsync(newRole))
             {
-                await _userManager.RemoveFromRoleAsync(user, role);
+                await _roleManager.CreateAsync(new IdentityRole(newRole));
             }
+            var result = await _userManager.AddToRoleAsync(user, newRole);
+            return result.Succeeded;
         }
 
-        public async Task DeleteUser(ApplicationUser user)
+        public async Task<bool> RemoveAllUserRolesAsync(ApplicationUser user)
         {
-            await _userManager.DeleteAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+            return result.Succeeded;
         }
-        public async Task<IList<string>> GetRolesAsync(ApplicationUser user)
+
+        public async Task<bool> DeleteUser(ApplicationUser user)
         {
-            return await _userManager.GetRolesAsync(user);
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<List<string>> GetRolesAsync(ApplicationUser user)
+        {
+            return new List<string>(await _userManager.GetRolesAsync(user));
         }
     }
 }
