@@ -886,6 +886,9 @@ h6, .h6 {
 .courses .container-test .courses-form {
   background: var(--color-gray-300);
   padding: 2rem;
+  /*            what-you-learn {
+
+              }*/
 }
 .courses .container-test .courses-form .form-group {
   margin: 0.5rem 0;
@@ -924,9 +927,24 @@ h6, .h6 {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0 1rem;
 }
-.courses .container-test .courses-form .content-wrapper .program-details-group {
-  display: flex;
-  gap: 1rem;
+.courses .container-test .courses-form .program-details-group {
+  display: block;
+  gap: 0 1rem;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr;
+  border-bottom: 1px solid var(--color-gray-500);
+  padding: 0.5rem 0 1rem 0;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper:first-child {
+  border-top: 1px solid var(--color-gray-500);
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper:last-child {
+  margin: 0 0 1rem 0;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper .form-group {
+  margin: 0;
 }
 
 html, body {

@@ -204,9 +204,32 @@
                 grid-template-columns: 1fr 1fr 1fr 1fr;
                 gap: 0 1rem;
 
-                .program-details-group {
-                    display: flex;
-                    gap: 1rem;
+            }
+/*            what-you-learn {
+                   
+            }*/
+
+            .program-details-group {
+                display: block;
+                gap: 0 1rem;
+
+                .form-wrapper {
+                    display: grid;
+                    grid-template-columns: 1fr 2fr 3fr;
+                    border-bottom: 1px solid var(--color-gray-500);
+                    padding: 0.5rem 0 1rem 0;
+
+                    &:first-child {
+                        border-top: 1px solid var(--color-gray-500);
+                    }
+
+                    &:last-child {
+                        margin:0 0 1rem 0;
+                    }
+
+                    .form-group {
+                        margin: 0;
+                    }
                 }
             }
         }

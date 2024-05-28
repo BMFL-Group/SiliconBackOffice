@@ -74,7 +74,28 @@
 
     public async Task CreateNewcCurse()
     {
-        _courseById = new Course();
+        _courseById = new Course()
+            {
+                Categories = ["", "", "", ""],
+                Authors = [
+                    new Author(),
+                    new Author()
+                ],
+                Content = new()
+                {
+                    Courseincludes = ["", "", "", ""],
+                    WhatYouLearn = ["", "", "", ""],
+                    ProgramDetails = [
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                    ]
+                }
+
+        };
     }
 
 

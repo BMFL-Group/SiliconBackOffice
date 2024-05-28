@@ -18,6 +18,67 @@ public class CourseService
         _configuration = configuration;
     }
 
+    public async Task<CourseResult> GetCourseIdAndTitle()
+    {
+        try
+        {
+            #region GRAPHQL QUERY
+
+            var query = new
+            {
+                query = @"
+                query($filterQuery: CourseFiltersInput!) {
+                    getCourses(filterQuery: $filterQuery) {
+                        courses {
+                            id
+                            title
+                        }
+                    }
+                }",
+                variables = new
+                {
+                    filterQuery = new
+                    {
+                        category = "",
+                        searchQuery = "",
+                        pageSize = 999,
+                        pageNumber = 1,
+                    }
+                }
+            };
+
+            var queryJson = JsonConvert.SerializeObject(query);
+            var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
+            var allCoursesResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlApi"]}", content);
+            if (allCoursesResponse.IsSuccessStatusCode)
+            {
+                var json = await allCoursesResponse.Content.ReadAsStringAsync();
+                var graphQLResponse = JsonConvert.DeserializeObject<GraphQLResponse>(json);
+                if (graphQLResponse != null && graphQLResponse.Data != null && graphQLResponse.Data.GetCourses != null && graphQLResponse.Data.GetCourses.Pagination != null)
+                {
+                    return new CourseResult()
+                    {
+                        Pagination = graphQLResponse.Data.GetCourses.Pagination,
+                        Courses = graphQLResponse.Data.GetCourses.Courses,
+
+                        Category = new()
+                        {
+                            CategoryName = "",
+                        }
+                    };
+                }
+            }
+            else
+            {
+                return new CourseResult();
+            }
+
+            #endregion
+        }
+        catch (Exception ex) { }
+        return null!;
+    }
+
     public async Task<CourseResult> GetAllCoursesAsync(string category = "all", string searchQuery = "", int pageNumber = 1, int pageSize = 6)
     {
         try
