@@ -1,35 +1,68 @@
 ﻿@page "/subscribers"
+@using SiliconBackOffice.Models
+@inject NewsletterService NewsletterService
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+<PageTitle>Subscribers</PageTitle>
 
-<section id="subscribers">
-
-    
-    <div class="container">
-
-        <div>
-            
+<section class="subscribers">
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1>Newsletter Subscribers</h1>
+            <p class="lead">Manage newsletter subscriptions and emails.</p>
         </div>
 
-
+        <table class="table table-hover mt-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Email</th>
+                    <th scope="col">Subscribed</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (subscribers == null)
+                {
+                    <tr><td colspan="3">Loading...</td></tr>
+                }
+                else
+                {
+                    @foreach (var subscriber in subscribers)
+                    {
+                        <tr>
+                            <td>@subscriber.Email</td>
+                            <td>@(subscriber.IsSubscribed ? "Yes" : "No")</td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary" @onclick="() => Unsubscribe(subscriber.Email)">Unsubscribe</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
     </div>
-    
-
-
 </section>
 
-
-
-
-
-
-
-
-
-
+<style>
+    .subscribers .container {
+        margin-top: 2rem;
+    }
+</style>
 
 @code {
+    private IEnumerable<NewsletterModel> subscribers;
 
+    protected override async Task OnInitializedAsync()
+    {
+        subscribers = await NewsletterService.GetSubscribersAsync();
+    }
 
-
-    private List
-
+    protected async Task Unsubscribe(string email)
+    {
+        var success = await NewsletterService.UnsubscribeAsync(email);
+        if (success)
+        {
+            subscribers = subscribers.Where(sub => sub.Email != email).ToList();
+        }
+    }
 }

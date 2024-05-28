@@ -1,6 +1,8 @@
 ﻿using SiliconBackOffice.Models;
-using System.Text.Json;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SiliconBackOffice.Services
 {
@@ -17,63 +19,36 @@ namespace SiliconBackOffice.Services
 
         public async Task<IEnumerable<NewsletterModel>> GetSubscribersAsync()
         {
-            try
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://newsletterprovider-bmfl.azurewebsites.net/api/getsubscriber?code=tPCFhF1FQuVYEQYn83tYTYUyYadZjTh6C2dhPSRKUFhLAzFuqRMTVw%3D%3D");
+            var response = await _http.SendAsync(request);
+            if (response.IsSuccessStatusCode)
             {
-                var result = await _http.GetAsync("https://newsletterprovider-bmfl.azurewebsites.net/api/getsubscriber?code=tPCFhF1FQuVYEQYn83tYTYUyYadZjTh6C2dhPSRKUFhLAzFuqRMTVw%3D%3D");
-                if (result.IsSuccessStatusCode)
-                {
-                    return await result.Content.ReadFromJsonAsync<IEnumerable<NewsletterModel>>() ?? Enumerable.Empty<NewsletterModel>();
-                }
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<IEnumerable<NewsletterModel>>(json) ?? Enumerable.Empty<NewsletterModel>();
             }
-            catch (Exception ex)
+            else
             {
-                throw new ApplicationException("Failed to retrieve subscribers", ex);
+                Console.WriteLine($"Failed to fetch subscribers: {response.StatusCode}");
+                return Enumerable.Empty<NewsletterModel>();
             }
-            return Enumerable.Empty<NewsletterModel>();
-        }
-
-        public async Task<NewsletterModel> GetSubscriberAsync(string email)
-        {
-            try
-            {
-                var result = await _http.GetAsync($"https://newsletterprovider-bmfl.azurewebsites.net/api/getsubscriber?code=tPCFhF1FQuVYEQYn83tYTYUyYadZjTh6C2dhPSRKUFhLAzFuqRMTVw%3D%3D&email={email}");
-                if (result.IsSuccessStatusCode)
-                {
-                    return await result.Content.ReadFromJsonAsync<NewsletterModel>() ?? throw new InvalidOperationException("Failed to deserialize response.");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"Failed to retrieve subscriber: {email}", ex);
-            }
-            return null!;
         }
 
         public async Task<bool> UpdateSubscriberAsync(NewsletterModel model)
         {
-            try
+            var json = JsonSerializer.Serialize(model);
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://newsletterprovider-bmfl.azurewebsites.net/api/Subscribe?code=jYf27X54n1bcCN5_hkPi-bEE5pcSX2kp_Uiplh0QDiUsAzFuZanPRg%3D%3D")
             {
-                var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-                var result = await _http.PostAsync("https://newsletterprovider-bmfl.azurewebsites.net/api/Subscribe?code=jYf27X54n1bcCN5_hkPi-bEE5pcSX2kp_Uiplh0QDiUsAzFuZanPRg%3D%3D", content);
-                return result.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Failed to update subscriber", ex);
-            }
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+            var response = await _http.SendAsync(request);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> UnsubscribeAsync(string email)
         {
-            try
-            {
-                var result = await _http.PostAsync($"https://newsletterprovider-bmfl.azurewebsites.net/api/Unsubscribe?code=nf9P6RZL4OXjbD3jR7W5dfIUVFwH4UlJK0Fb3RglfPAbAzFuOdFs1A%3D%3D&email={email}", null);
-                return result.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException($"Failed to unsubscribe: {email}", ex);
-            }
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://newsletterprovider-bmfl.azurewebsites.net/api/Unsubscribe?code=nf9P6RZL4OXjbD3jR7W5dfIUVFwH4UlJK0Fb3RglfPAbAzFuOdFs1A%3D%3D&email={email}");
+            var response = await _http.SendAsync(request);
+            return response.IsSuccessStatusCode;
         }
     }
 }
