@@ -71,6 +71,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseStatusCodePagesWithRedirects("/Error");
 app.UseStaticFiles();
 
 app.UseRouting();

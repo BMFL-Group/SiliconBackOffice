@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
-    <Content Remove="Components\Pages\Subscribers.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +23,6 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-    <None Include="Components\Pages\Subscribers.razor" />
   </ItemGroup>
 
   <ItemGroup>
