@@ -1,137 +1,69 @@
-﻿@page "/users"
-@rendermode InteractiveServer
-@attribute [StreamRendering]
+﻿@page "/Users"
 @using SiliconBackOffice.Data
-@inject UserService UserService
+@attribute [StreamRendering]
+
 <PageTitle>Users</PageTitle>
 
-<section class="users">
-    <div class="container mt-5">
-        <div class="text-center">
-            <h1>User Management</h1>
-            <p class="lead">Manage user accounts, roles, and permissions.</p>
-        </div>
-
-        <table class="table table-hover mt-4">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Username / Email</th>
-                    <th scope="col">Roles</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (users == null)
-                {
-                    <tr><td colspan="4">Loading...</td></tr>
-                }
-                else
-                {
-                    foreach (var user in users)
-                    {
-                        <tr>
-                            <td>@user.Id</td>
-                            <td>@user.Email</td>
-                            <td>@(userRoles.ContainsKey(user.Id) ? string.Join(", ", userRoles[user.Id]) : "No Roles")</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" @onclick="() => ShowAssignRolePanel(user)">Assign Role</button>   
-                                <button class="btn btn-sm btn-danger" @onclick="() => OnDeleteUser(user)">Delete</button>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-
-        @if (isAssignRolePanelVisible)
-        {
-            <div class="side-panel">
-                <h3>Assign Role to @selectedUser?.UserName</h3>
-                <select @bind="newRole" class="form-control mb-2">
-                    @foreach (var role in allRoles)
-                    {
-                        <option value="@role">@role</option>
-                    }
-                </select>
-                <button class="btn btn-sm btn-primary" @onclick="AssignRoleToSelectedUser">Assign Role</button>
-                <button class="btn btn-sm btn-secondary" @onclick="HideAssignRolePanel">Cancel</button>
-            </div>
-        }
+<div class="container mt-5">
+    <div class="text-center">
+        <h1>User Management</h1>
+        <p class="lead">Manage user accounts, roles, and permissions.</p>
     </div>
-</section>
 
-<style>
-    .side-panel {
-        position: fixed;
-        right: 0;
-        top: 0;
-        width: 300px;
-        height: 100%;
-        background-color: white;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-        padding: 20px;
-        z-index: 1000;
-    }
-</style>
+    <table class="table table-hover mt-4">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Roles</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@(userRoles.ContainsKey(user.Id) ? string.Join(", ", userRoles[user.Id]) : "No Roles")</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="@(async () => await AssignRole(user, "NewRole"))">Assign Role</button>
+                        <button class="btn btn-sm btn-danger" @onclick="@(async () => await DeleteUser(user))">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
     private List<ApplicationUser> users = new List<ApplicationUser>();
     private Dictionary<string, List<string>> userRoles = new Dictionary<string, List<string>>();
-    private List<string> allRoles = new List<string>();
-    private ApplicationUser selectedUser;
-    private string newRole;
-    private bool isAssignRolePanelVisible = false;
+
+    [Inject]
+    private UserService UserService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         users = await UserService.GetUsersAsync();
-        allRoles = await UserService.GetAllRolesAsync();
         foreach (var user in users)
         {
-            userRoles[user.Id] = await UserService.GetRolesAsync(user);
+            var roles = await UserService.GetRolesAsync(user);
+            userRoles[user.Id] = new List<string>(roles);
         }
     }
 
-    private void ShowAssignRolePanel(ApplicationUser user)
+    private async Task AssignRole(ApplicationUser user, string role)
     {
-        selectedUser = user;
-        isAssignRolePanelVisible = true;
+        await UserService.AssignRole(user, role);
+        userRoles[user.Id] = new List<string>(await UserService.GetRolesAsync(user));
     }
 
-    private void HideAssignRolePanel()
+    private async Task DeleteUser(ApplicationUser user)
     {
-        isAssignRolePanelVisible = false;
-    }
-
-    private async Task AssignRoleToSelectedUser()
-    {
-        if (selectedUser != null && !string.IsNullOrWhiteSpace(newRole))
-        {
-            var success = await UserService.UpdateUserRoleAsync(selectedUser, newRole);
-            if (success)
-            {
-                userRoles[selectedUser.Id] = new List<string> { newRole };
-                HideAssignRolePanel();
-            }
-        }
-    }
-
-    private async Task RemoveRolesFromUser(ApplicationUser user)
-    {
-        var success = await UserService.RemoveAllUserRolesAsync(user);
-        if (success)
-        {
-            userRoles[user.Id] = new List<string>(); 
-        }
-    }
-
-    private async Task OnDeleteUser(ApplicationUser user)
-    {
-        var success = await UserService.DeleteUser(user);
-        if (success)
-        {
-            users.Remove(user); 
-        }
+        await UserService.DeleteUser(user);
+        users = await UserService.GetUsersAsync();
     }
 }
