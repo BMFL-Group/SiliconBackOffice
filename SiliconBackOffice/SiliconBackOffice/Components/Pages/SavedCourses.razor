@@ -8,45 +8,72 @@
 
 <h1>Saved courses</h1>
 
+<EditForm Model="@_email" >
+    <ChildContent>
+        <div class="find-email">
+            <label>Type in user email to find your courses</label>
+            <InputText @bind-Value="_email.Email" />
+            <button class="btn-theme" @onclick=" () => HandleUserEmail(_email.Email)">Find user</button>
+        </div>
+        
+    </ChildContent>
+</EditForm>
+
 @if (_savedCourses == null)
 {
     <div>Loading ....</div>
 }
 else
 {
-
-    @foreach (var course in _savedCourses)
+    @foreach (var savedCourse in _savedCourses)
     {
-        <EditForm Model="@course" class="form-control saved-courses-form">
-            <ChildContent>
-               
-               
+        <EditForm Model="@savedCourse" class="form-control saved-courses-form">
+            <ChildContent>             
                 <div class="form-wrapper-saved-courses">
                     <div class="form-group-saved-users-id">
                         <label id="user-id-label">User Id</label>
-                        <InputText @bind-Value="course.UserId" id="user-id-input" />
-                        <label id="user-id-label">User Name</label>
-                        <InputText @bind-Value="course.UserId" id="user-id-input" />
+                        <InputText @bind-Value="savedCourse.UserId" id="user-id-input" readonly />
+                        @if (_user != null)
+                        {
+                            if (_user.Id == savedCourse.UserId)
+                            {
+                                <label id="user-id-label">User Name</label>
+                                <InputText @bind-Value="_user.Email" id="user-id-input" readonly />
+                            }
+                        }
+                     
                     </div>
                     <div class="form-group-saved-courses-id">
                         <label id="course-id-label">Course Id</label>
-                        <InputText @bind-Value="course.CourseId" id="course-id-input" />
-                        @* @foreach (var courseName in ) *@
-                        <label id="course-id-label">Course Name</label>
-                        <InputText @bind-Value="_course.Title" id="course-id-input" />
+                        <InputText @bind-Value="savedCourse.CourseId" id="course-id-input" readonly />
+
+                        @if (_courses != null && _courses.Any())
+                        {
+                            foreach (var course in _courses)
+                            {
+                                @if (savedCourse.CourseId == course.Id)
+                                {
+                                    <label id="course-id-label">Course Name</label>
+                                    <InputText @bind-Value="course.Title" id="course-id-input" readonly/>
+                                }                                
+                            }
+                        }
+
                     </div>
                     <div class="checkbox-wrapper">
                         <div class="checkbox-group-form">
                             <label id="bookmark-lable">Bookmarked</label>
-                            <InputCheckbox style="width: 1.5rem; " id="bookmark-input" @bind-Value="course.IsBookmarked" />
+                            <InputCheckbox style="width: 1.5rem; " id="bookmark-input" @bind-Value="savedCourse.IsBookmarked" />
                         </div>
                         <div class="checkbox-group-form">
                             <label id="has-joined-label">Has Joined</label>
-                            <InputCheckbox id="has-joined-input" @bind-Value="course.HasJoined" />
+                            <InputCheckbox id="has-joined-input" @bind-Value="savedCourse.HasJoined" />
                         </div>
                     </div>
                   
                 </div>
+
+                <button class="btn-theme" @onclick="() => HandleForm(savedCourse)">Save Changes</button>
             </ChildContent>
         </EditForm>
     }
@@ -55,13 +82,51 @@ else
 @code {
     public IEnumerable<SavedCoursesModel>? _savedCourses { get; set; }
 
-    public Course? _course { get; set; }
+    public IEnumerable<Course>? _courses { get; set; }
+    public ApplicationUser? _user { get; set; }
+    public SavedCoursesEmailModel _email { get; set; } = new();
 
 
-    protected override async Task OnInitializedAsync()
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     _user = await _userManager.FindByEmailAsync("bjornandersson84@gmail.com");
+
+    //     if (_user != null)
+    //     {
+    //         _savedCourses = await _savedCoursesService.GetSavedCoursesAsync(_user.Id);
+    //         var result = await _courseService.GetCourseIdAndTitle();
+    //         if (result != null)
+    //         {
+    //             _courses = result.Courses;
+    //         }
+    //     }      
+    // }
+
+    private async Task HandleForm(SavedCoursesModel savedCourse)
     {
-        _savedCourses = await _savedCoursesService.GetSavedCoursesAsync("ed628e1f-d322-49ec-b617-77ed7f022694");
-        _course = await _courseService.GetOneCourseByIdAsync("");
+        if (savedCourse.HasJoined == false && savedCourse.IsBookmarked == false)
+        {
+            var response = await _savedCoursesService.DeleteSavedCourses(savedCourse);
+        }
+        else
+        {
+            var response = await _savedCoursesService.UpdateSavedCourses(savedCourse);
+        }
 
+    }
+
+    private async Task HandleUserEmail(string email)
+    {
+        _user = await _userManager.FindByEmailAsync(email);
+
+        if (_user != null)
+        {
+            _savedCourses = await _savedCoursesService.GetSavedCoursesAsync(_user.Id);
+            var result = await _courseService.GetCourseIdAndTitle();
+            if (result != null)
+            {
+                _courses = result.Courses;
+            }
+        }
     }
 }
