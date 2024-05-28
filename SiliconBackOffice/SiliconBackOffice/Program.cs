@@ -32,7 +32,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // Setup Identity services
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequiredLength = 8;   
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
@@ -43,6 +45,20 @@ builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roles = { "Admin", "SuperAdmin", "UltraAdmin" };
+
+    for (int index = 0; index < roles.Length; index++)
+    {
+        if (!await roleManager.RoleExistsAsync(roles[index]))
+        {
+            await roleManager.CreateAsync(new IdentityRole(roles[index]));
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

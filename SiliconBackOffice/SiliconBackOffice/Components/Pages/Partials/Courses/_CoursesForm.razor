@@ -120,6 +120,8 @@
 
                 @if (_course.Content != null)
                 {
+                    <h5>Course Content:</h5>
+
                     <div class="form-group">
                         <label>Content Description</label>
                         <InputText @bind-Value="_course.Content.Description" class="form-control" />
@@ -128,63 +130,73 @@
                     <div class="content-wrapper">
                         @if (_course.Content.Courseincludes != null)
                         {
+                            var j = 0;
                             @for (int i = 0; i < _course.Content.Courseincludes.Length; i++)
                             {
+                                j++;
                                 <div class="form-group">
-                                    <label>Course includes @i</label>
+                                    <label>Course includes: @j</label>
                                     <InputText @bind-Value="_course.Content.Courseincludes[i]" class="form-control" />
                                 </div>
                             }
                         }
                     </div>
 
-                    <div class="divider"></div>
+                    //<div class="divider"></div>
 
-                    <div class="content-wrapper">
-                        @if (_course.Content.WhatYouLearn != null)
-                        {       
-                            @for (int i = 0; i < _course.Content.WhatYouLearn.Length; i++)
+                    <div class="what-you-learn">
+                        
+                        @* <h5>What You Learn:</h5> *@
+                        <div class="content-wrapper ">
+                            @if (_course.Content.WhatYouLearn != null)
                             {
-                                <div class="form-group">
-                                    <label>What you learn @i</label>
-                                    <InputText @bind-Value="_course.Content.WhatYouLearn[i]" class="form-control" />
-                                </div>
+
+                                var j = 0;
+                                @for (int i = 0; i < _course.Content.WhatYouLearn.Length; i++)
+                                {
+                                    j++;
+                                    <div class="form-group">
+                                        <label>You Learn: @j</label>
+                                        <InputText @bind-Value="_course.Content.WhatYouLearn[i]" class="form-control" />
+                                    </div>
+                                }
                             }
-                        }
+                        </div>
                     </div>
 
                     <div class="divider"></div>
 
-                    <div class="content-wrapper">
+                    <div class="program-details-group">
+                        
+                        <h5>Program Details:</h5>
 
                         @if (_course.Content.ProgramDetails != null)
                         {
                             foreach (var programDetail in _course.Content.ProgramDetails)
                             {
-                                <div class="program-details-group">
+                                <div class="form-wrapper">
                                     <div class="form-group">
-                                        <label>ProgramDetails Id</label>
+                                        <label>Id</label>
                                         <InputNumber @bind-Value="programDetail.Id" class="form-control" />
                                     </div>
                                     <div class="form-group">
-                                        <label>Sub heading</label>
+                                        <label>Title</label>
                                         <InputText @bind-Value="programDetail.Title" class="form-control" />
                                     </div>
-                                </div>
 
-                                @if (programDetail.Description != null)
-                                {
-                                    <div class="categories-group">
-                                        @for (int i = 0; i < programDetail.Description.Length; i++)
-                                        {
-                                            var inputId = (programDetail.Id).ToString();
-                                            <div class="form-group">
-                                                <label>Sub heading for description @inputId</label>
-                                                <InputText @bind-Value="programDetail.Description[i]" class="form-control" />
-                                            </div>
-                                        }
-                                    </div>
-                                }
+                                    @if (programDetail.Description != null)
+                                    {
+                                    
+                                            @for (int i = 0; i < programDetail.Description.Length; i++)
+                                            {
+                                                var inputId = (programDetail.Id).ToString();
+                                                <div class="form-group">
+                                                    <label>Description @inputId</label>
+                                                    <InputText @bind-Value="programDetail.Description[i]" class="form-control" />
+                                                </div>
+                                            }
+                                    }
+                                </div>
                             }
                         }
                     </div>
