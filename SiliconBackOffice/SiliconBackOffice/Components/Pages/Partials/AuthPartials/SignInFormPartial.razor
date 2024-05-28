@@ -67,7 +67,7 @@
                     var result = await _signInManager.PasswordSignInAsync(SignInForm.Email, SignInForm.Password, SignInForm.Remember, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
-                        _redirectManager.RedirectTo("/");
+                        _redirectManager.RedirectTo("/Home");
                     }
                     else
                         ErrorMessage = "Wrong password or email";
