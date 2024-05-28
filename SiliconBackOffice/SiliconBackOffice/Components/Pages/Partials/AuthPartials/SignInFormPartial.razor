@@ -4,7 +4,7 @@
     <div class="error-message">@ErrorMessage</div>
 }
 
-<EditForm FormName="signinform" Model="SignInForm" OnValidSubmit="OnValidSubmit"  novalidate>
+<EditForm FormName="signinform" Model="SignInForm" OnValidSubmit="OnValidSubmit" novalidate>
     <DataAnnotationsValidator />
     <div id="form-email" class="input-group">
         <label for="Email">Email address</label>
@@ -40,8 +40,10 @@
     private SignInFormModel SignInForm { get; set; } = new();
 
     private string ErrorMessage { get; set; } = "";
+
     private List<IdentityRole>? Roles { get; set; } = null;
     private IList<string>? UserRole { get; set; } = null;
+
     protected override async Task OnInitializedAsync()
     {
         if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
@@ -53,35 +55,31 @@
     public async Task OnValidSubmit(EditContext editContext)
     {
         ErrorMessage = "";
-        try
+
+        User = await _userManager.FindByEmailAsync(SignInForm.Email);
+
+        if (User != null)
         {
-            User = await _userManager.FindByEmailAsync(SignInForm.Email);
+            UserRole = await _userManager.GetRolesAsync(User);
+            Roles = await _roleManager.Roles.ToListAsync();
 
-            if (User != null)
+            if (UserRole != null && Roles.Count > 0 && Roles.Any(role => UserRole.Contains(role.ToString())))
             {
-                UserRole = await _userManager.GetRolesAsync(User);
-                Roles = await _roleManager.Roles.ToListAsync();
-
-                if (UserRole != null && Roles.Count > 0 && Roles.Any(role => UserRole.Contains(role.ToString())))
+                var result = await _signInManager.PasswordSignInAsync(SignInForm.Email, SignInForm.Password, SignInForm.Remember, lockoutOnFailure: false);
+                if (result.Succeeded)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(SignInForm.Email, SignInForm.Password, SignInForm.Remember, lockoutOnFailure: false);
-                    if (result.Succeeded)
-                    {
-                        _redirectManager.RedirectTo("/Home");
-                    }
-                    else
-                        ErrorMessage = "Wrong password or email";
-                        return;
+                    _redirectManager.RedirectTo("/");
                 }
-
-                ErrorMessage = "You must be an admin or higher to login.";
+                else
+                    ErrorMessage = "Wrong password or email";
                 return;
             }
 
-            ErrorMessage = "The admin does not exist";
+            ErrorMessage = "You must be an admin or higher to login.";
             return;
         }
-        catch (Exception e) { Debug.WriteLine($"Error: {e.Message}"); }
-        ErrorMessage = "Something went wrong...try again later";
+
+        ErrorMessage = "The admin does not exist";
+        return;
     }
 }

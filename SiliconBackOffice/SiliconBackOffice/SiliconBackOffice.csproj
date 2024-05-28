@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="Components\Pages\Subscribers.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,15 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
+    <None Include="Components\Pages\Subscribers.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Subscribers.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\Subscribers.razor" />
   </ItemGroup>
 
 </Project>

@@ -46,7 +46,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roles = { "Admin", "SuperAdmin", "UltraAdmin" };
+    string[] roles = { "User","Admin", "SuperAdmin", "UltraAdmin" };
 
     for (int index = 0; index < roles.Length; index++)
     {

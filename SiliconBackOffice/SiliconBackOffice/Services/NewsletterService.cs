@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using SiliconBackOffice.Models;
+﻿using SiliconBackOffice.Models;
 using System.Text.Json;
 using System.Text;
 
@@ -8,10 +7,12 @@ namespace SiliconBackOffice.Services
     public class NewsletterService
     {
         private readonly HttpClient _http;
+        private readonly IConfiguration _config;
 
-        public NewsletterService(HttpClient http)
+        public NewsletterService(HttpClient http, IConfiguration config)
         {
             _http = http;
+            _config = config;
         }
 
         public async Task<IEnumerable<NewsletterModel>> GetSubscribersAsync()
