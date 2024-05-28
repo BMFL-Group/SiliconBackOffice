@@ -1,4 +1,4 @@
-﻿@inject UserManager<ApplicationUser> _userManager
+@inject UserManager<ApplicationUser> _userManager
 @inject SignInManager<ApplicationUser> _signInManager
 @inject NavigationManager _navigationManager
 @inject IdentityRedirectManager _redirectManager
@@ -22,9 +22,38 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.WebUtilities
+
 @using SiliconBackOffice.Components.Account
 @using SiliconBackOffice.Components.Account.Pages
 @using SiliconBackOffice.Data
+=======
+@using SiliconBackOffice.Data
+
+@* -----------------------Account------------------------------------- *@
+
+@using SiliconBackOffice.Components.Account
+@using SiliconBackOffice.Components.Account.Pages
+@using SiliconBackOffice.Components.Pages.Partials.AuthPartials
+@using SiliconBackOffice.Models.AuthModels
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore;
+@using System.Threading.Tasks;
+@using System.Collections.Generic;
+
+
+@inject UserManager<ApplicationUser> _userManager
+@inject SignInManager<ApplicationUser> _signInManager
+@inject NavigationManager _navigationManager
+@inject IdentityRedirectManager _redirectManager
+@inject IEmailSender<ApplicationUser> _emailSender
+@inject IUserStore<ApplicationUser> _userStore
+@inject ILogger<Register> _logger
+@inject ApplicationDbContext _dataContext
+@inject RoleManager<IdentityRole> _roleManager
+
+
 
 @* -----------------------Account------------------------------------- @
 
@@ -47,6 +76,7 @@
 @ @using Pages
 @using Components.Pages.Partials
 @using Components.Pages.Partials.Courses *@
+@using SiliconBackOffice.Data
 @using SiliconBackOffice.Models.Courses
 @using SiliconBackOffice.Components.Pages.Partials.Courses
 @using SiliconBackOffice.Services

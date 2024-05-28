@@ -1,0 +1,87 @@
+﻿
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="error-message">@ErrorMessage</div>
+}
+
+<EditForm FormName="signinform" Model="SignInForm" OnValidSubmit="OnValidSubmit"  novalidate>
+    <DataAnnotationsValidator />
+    <div id="form-email" class="input-group">
+        <label for="Email">Email address</label>
+        <InputText type="email" @bind-Value="SignInForm.Email" id="Email" placeholder="Enter your email address" />
+        <ValidationMessage For="() => SignInForm.Email" />
+    </div>
+    <div id="form-password" class="input-group">
+        <label for="Password">Password</label>
+        <InputText type="password" @bind-Value="SignInForm.Password" id="Password" placeholder="Enter your password" />
+        <ValidationMessage For="() => SignInForm.Password" />
+    </div>
+    <div id="form-remeber" class="checkbox-group">
+        <div class="checkbox">
+            <InputCheckbox id="Remember" @bind-Value="SignInForm.Remember" />
+            <label for="Remember">Remember me</label>
+        </div>
+    </div>
+    <button type="submit" class="btn-theme">Sign in</button>
+</EditForm>
+
+
+@code {
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private ApplicationUser? User { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    [SupplyParameterFromForm(Name = "signinform")]
+    private SignInFormModel SignInForm { get; set; } = new();
+
+    private string ErrorMessage { get; set; } = "";
+    private List<IdentityRole>? Roles { get; set; } = null;
+    private IList<string>? UserRole { get; set; } = null;
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        }
+    }
+
+    public async Task OnValidSubmit(EditContext editContext)
+    {
+        ErrorMessage = "";
+        try
+        {
+            User = await _userManager.FindByEmailAsync(SignInForm.Email);
+
+            if (User != null)
+            {
+                UserRole = await _userManager.GetRolesAsync(User);
+                Roles = await _roleManager.Roles.ToListAsync();
+
+                if (UserRole != null && Roles.Count > 0 && Roles.Any(role => UserRole.Contains(role.ToString())))
+                {
+                    var result = await _signInManager.PasswordSignInAsync(SignInForm.Email, SignInForm.Password, SignInForm.Remember, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                    {
+                        _redirectManager.RedirectTo("/");
+                    }
+                    else
+                        ErrorMessage = "Wrong password or email";
+                        return;
+                }
+
+                ErrorMessage = "You must be an admin or higher to login.";
+                return;
+            }
+
+            ErrorMessage = "The admin does not exist";
+            return;
+        }
+        catch (Exception e) { Debug.WriteLine($"Error: {e.Message}"); }
+        ErrorMessage = "Something went wrong...try again later";
+    }
+}
