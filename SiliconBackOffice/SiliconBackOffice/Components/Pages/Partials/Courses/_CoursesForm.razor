@@ -1,4 +1,6 @@
-﻿<div class="course-form">
+﻿@attribute [StreamRendering]
+
+<div class="course-form">
     @if (_course == null)
     {
         <h6 class="load-text">Click a "view/edit" button to see course details</h6>
@@ -133,7 +135,25 @@
                     <div class="content-wrapper">
                         @if (_course.Content.Courseincludes != null)
                         {
-                            var j = 0;
+                            int i = 0;
+                            int j = 1;
+                            foreach (string courseIncludes in _course.Content.Courseincludes)
+                            {
+                                if (i == 5)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <label>Course includes: @j</label>
+                                        <InputText @bind-Value="_course.Content.Courseincludes[i]" class="form-control" />
+                                    </div>
+                                    i++;
+                                    j++;                                    
+                                }
+                            }
+                            @*                             var j = 0;
                             @for (int i = 0; i < _course.Content.Courseincludes.Length; i++)
                             {
                                 j++;
@@ -141,7 +161,7 @@
                                     <label>Course includes: @j</label>
                                     <InputText @bind-Value="_course.Content.Courseincludes[i]" class="form-control" />
                                 </div>
-                            }
+                            } *@
                         }
                     </div>
 
