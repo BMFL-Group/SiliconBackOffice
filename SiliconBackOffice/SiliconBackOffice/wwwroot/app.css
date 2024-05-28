@@ -815,12 +815,6 @@ h6, .h6 {
   justify-content: space-between;
   align-items: center;
 }
-@media (min-width: 768px) {
-  .create-account .container .content form .name {
-    flex-direction: row;
-    gap: 20px;
-  }
-}
 .create-account .container .content form .checkbox-group {
   margin-top: 10px;
   margin-bottom: 25px;

@@ -15,19 +15,14 @@
             }
 
             form {
-
                 .name {
                     width: 100%;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
                     align-items: center;
-
-                    @include md {
-                        flex-direction: row;
-                        gap: 20px;
-                    }
                 }
+            
 
                 .checkbox-group {
                     margin-top: 10px;
