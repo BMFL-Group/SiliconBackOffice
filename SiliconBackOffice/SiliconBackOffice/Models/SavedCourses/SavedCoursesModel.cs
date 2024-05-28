@@ -9,5 +9,5 @@ public class SavedCoursesModel
     public string UserId { get; set; } = null!;
     public bool IsBookmarked { get; set; }
     public bool HasJoined { get; set; }
-    public List<Course>? Course { get; set; } 
+    public Course Course { get; set; } = null!;
 }

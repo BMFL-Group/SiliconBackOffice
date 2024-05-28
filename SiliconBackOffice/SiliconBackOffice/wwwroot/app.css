@@ -931,53 +931,38 @@ h6, .h6 {
 
 .saved-courses-form {
   background-color: var(--color-gray-300);
+  margin: 1rem 0;
 }
 .saved-courses-form .form-wrapper-saved-courses {
   display: grid;
-  grid-template-columns: 1fr 1fr auto auto;
+  grid-template-columns: 2fr 2fr 1fr;
   grid-gap: 1rem;
-  grid-template-areas: "user-id-label course-id-label bookmark-label bookmark-input has-joined-label has-joined-input" "user-id-input course-id-input  ";
+  grid-template-areas: "courses users checkboxes";
 }
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id {
-  display: flex;
-  flex-direction: column;
-}
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id label {
+.saved-courses-form .form-wrapper-saved-courses label {
+  display: block;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id input {
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id input, .saved-courses-form .form-wrapper-saved-courses .form-group-saved-users-id input {
   border-radius: 0.25rem;
-  width: 65%;
+  width: 100%;
   margin-bottom: 0.5rem;
   text-align: center;
   padding: 0.5rem;
 }
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #user-id-label {
-  grid-area: user-id-label;
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id .form-group-saved-courses-id, .saved-courses-form .form-wrapper-saved-courses .form-group-saved-users-id .form-group-saved-courses-id {
+  grid-area: courses;
 }
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #user-id-input {
-  grid-area: user-id;
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id .form-group-saved-users-id, .saved-courses-form .form-wrapper-saved-courses .form-group-saved-users-id .form-group-saved-users-id {
+  grid-area: users;
 }
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #course-id-label {
-  grid-area: course-id-label;
+.saved-courses-form .form-wrapper-saved-courses .checkbox-wrapper {
+  grid-area: checkboxes;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #course-id-input {
-  grid-area: course-id-input;
-}
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #bookmark-lable {
-  grid-area: bookmark-lable;
-}
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #bookmark-input {
-  grid-area: bookmark-input;
-}
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #has-joined-label {
-  grid-area: has-joined-label;
-}
-.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id #has-joined-input {
-  grid-area: has-joined-input;
-}
-
 html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

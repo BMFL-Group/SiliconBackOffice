@@ -4,7 +4,6 @@
 @rendermode InteractiveServer
 @attribute [StreamRendering]
 
-
 <PageTitle>Saved Courses</PageTitle>
 
 <h1>Saved courses</h1>
@@ -15,13 +14,15 @@
 }
 else
 {
+
     @foreach (var course in _savedCourses)
     {
         <EditForm Model="@course" class="form-control saved-courses-form">
             <ChildContent>
-
+               
+               
                 <div class="form-wrapper-saved-courses">
-                    <div class="form-group-saved-courses-id">
+                    <div class="form-group-saved-users-id">
                         <label id="user-id-label">User Id</label>
                         <InputText @bind-Value="course.UserId" id="user-id-input" />
                         <label id="user-id-label">User Name</label>
@@ -30,18 +31,21 @@ else
                     <div class="form-group-saved-courses-id">
                         <label id="course-id-label">Course Id</label>
                         <InputText @bind-Value="course.CourseId" id="course-id-input" />
+                        @* @foreach (var courseName in ) *@
                         <label id="course-id-label">Course Name</label>
                         <InputText @bind-Value="_course.Title" id="course-id-input" />
                     </div>
-                    <div class="form-group-saved-courses">
-                        <label id="bookmark-lable">Bookmarked</label>
-                        <InputCheckbox id="bookmark-input" @bind-Value="course.IsBookmarked" />
+                    <div class="checkbox-wrapper">
+                        <div class="checkbox-group-form">
+                            <label id="bookmark-lable">Bookmarked</label>
+                            <InputCheckbox style="width: 1.5rem; " id="bookmark-input" @bind-Value="course.IsBookmarked" />
+                        </div>
+                        <div class="checkbox-group-form">
+                            <label id="has-joined-label">Has Joined</label>
+                            <InputCheckbox id="has-joined-input" @bind-Value="course.HasJoined" />
+                        </div>
                     </div>
-                    <div class="form-group-saved-courses">
-                        <label id="has-joined-label">Has Joined</label>
-                        <InputCheckbox id="has-joined-input" @bind-Value="course.HasJoined" />
-                    </div>
-
+                  
                 </div>
             </ChildContent>
         </EditForm>
@@ -52,6 +56,7 @@ else
     public IEnumerable<SavedCoursesModel>? _savedCourses { get; set; }
 
     public Course? _course { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
