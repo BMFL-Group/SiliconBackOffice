@@ -7,12 +7,13 @@
 
 <section class="courses">
     <div class="container-test">
-        <div class="text-center">
+        <div class="page-title">
             <h1>Courses Management</h1>
             <p class="lead">Manage courses, descriptions, content, and categories.</p>
+            
+            <button class="btn btn-theme" @onclick="CreateNewcCurse">Create New Course</button>
         </div>
         
-        <button class="btn btn-theme" @onclick="CreateNewcCurse">Create New Course</button>
 
         <table class="table table-hover courses-aside">
             <thead class="thead-dark">
@@ -83,15 +84,15 @@
                 ],
                 Content = new()
                 {
-                    Courseincludes = ["", "", "", ""],
+                    Courseincludes = [string.Empty, string.Empty, string.Empty, string.Empty],
                     WhatYouLearn = ["", "", "", ""],
                     ProgramDetails = [
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = []},
+                        new ProgramDetails(){ Description = []},
+                        new ProgramDetails(){ Description = []},
+                        new ProgramDetails(){ Description = []},
+                        new ProgramDetails(){ Description = []},
+                        new ProgramDetails(){ Description = []},
                     ]
                 }
 

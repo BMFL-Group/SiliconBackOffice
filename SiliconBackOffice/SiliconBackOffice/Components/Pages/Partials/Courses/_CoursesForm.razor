@@ -7,11 +7,12 @@
     {
         <EditForm FormName="EditCourse" Model="_course" class="form-control courses-form">
             <ChildContent>
+                <h4>Course content</h4>
 
                 <div class="form-wrapper">
                     <div class="form-group">
                         <label>Id</label>
-                        <InputText @bind-Value="_course.Id" class="form-control" />
+                        <InputText @bind-Value="_course.Id" class="form-control" readonly/>
                     </div>
                     <div class="form-group">
                         <label>Title</label>
@@ -50,18 +51,20 @@
 
                 <div class="divider"></div>
 
-                @if (_course.Categories != null)
-                {
-                    <div class="content-wrapper">
+                <div class="content-wrapper">
+                    @if (_course.Categories != null)
+                    {
+                        var j = 0;
                         @for (int i = 0; i < _course.Categories.Length; i++)
                         {
+                            j++;
                             <div class="form-group">
-                                <label>Category @i</label>
+                                <label>Category @j</label>
                                 <InputText @bind-Value="_course.Categories[i]" class="form-control" />
                             </div>
                         }
-                    </div>
-                }
+                    }
+                </div>
 
                 <div class="divider"></div>
 
@@ -103,9 +106,9 @@
 
                 <div class="divider"></div>
 
-                @if (_course.Authors != null)
-                {
-                    <div class="form-wrapper">
+                <div class="form-wrapper">
+                    @if (_course.Authors != null)
+                    {
                         <div class="form-group">
                             @foreach (var author in _course.Authors)
                             {
@@ -113,8 +116,8 @@
                                 <InputText @bind-Value="author.Name" class="form-control" />
                             }
                         </div>
-                    </div>
-                }
+                    }
+                </div>
 
                 <div class="divider"></div>
 
@@ -177,7 +180,7 @@
                                 <div class="form-wrapper">
                                     <div class="form-group">
                                         <label>Id</label>
-                                        <InputNumber @bind-Value="programDetail.Id" class="form-control" />
+                                        <InputNumber @bind-Value="programDetail.Id" class="form-control" readonly />
                                     </div>
                                     <div class="form-group">
                                         <label>Title</label>
