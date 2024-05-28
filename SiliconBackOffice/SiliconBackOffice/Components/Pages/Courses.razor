@@ -2,6 +2,7 @@
 
 @rendermode InteractiveServer
 @attribute [StreamRendering]
+@attribute [Authorize]
 
 <PageTitle>Courses</PageTitle>
 
@@ -11,19 +12,17 @@
             <h1>Courses Management</h1>
             <p class="lead">Manage courses, descriptions, content, and categories.</p>
         </div>
+        
+        <button class="btn btn-theme" @onclick="CreateNewcCurse">Create New Course</button>
 
-        <table class="table table-hover mt-4 courses-aside">
+        <table class="table table-hover courses-aside">
             <thead class="thead-dark">
                 <tr>
-                   @*  <th scope="col">ID</th> *@
                     <th scope="col">Course Name</th>
-                    @* <th scope="col">Description</th>
-                    <th scope="col">Includes</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Content</th>
-                    <th scope="col">Actions</th> *@
                 </tr>
             </thead>
+            
+
             <tbody>
                 @if (_courses == null)
                 {
@@ -34,18 +33,9 @@
                     @foreach (var course in _courses)
                     {
                         <tr>
-                            @* <td>@course.Id</td> *@
-                            <td>@course.Title</td>
-                            @* <td>@course.ProgramDetails</td> *@
-                            @* <td>@course.Content.Description</td> *@
-                           @*  @foreach (var category in _categories)
-                            {
-                                <td>@course.Categories</td>
-                            } *@
-                            <td>@course.Content</td>
+                            <td>@course.Title</td>    
                             <td>
-                                <button class="btn btn-sm btn-primary" @onclick="() => EditCourse(course)">View/Edit</button>
-                                <button class="btn btn-sm btn-danger" @onclick="() => DeleteCourse(course)">Delete</button>
+                                <button class="btn btn-sm btn-primary" @onclick="() => EditCourse(course)">View/Edit</button>                                
                             </td>
                         </tr>
                     }
@@ -67,9 +57,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await _courseService.GetAllCoursesAsync("", "", 1, 9);
-
-        _courses = result.Courses;
+        var result = await _courseService.GetAllCoursesAsync("", "", 1, 999);
+        if (result != null)
+        {
+            _courses = result.Courses;            
+        }
     }
 
     private async Task EditCourse(Course course)
@@ -80,6 +72,33 @@
             _courseById = result;
         }
     }
+
+    public async Task CreateNewcCurse()
+    {
+        _courseById = new Course()
+            {
+                Categories = ["", "", "", ""],
+                Authors = [
+                    new Author(),
+                    new Author()
+                ],
+                Content = new()
+                {
+                    Courseincludes = ["", "", "", ""],
+                    WhatYouLearn = ["", "", "", ""],
+                    ProgramDetails = [
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                        new ProgramDetails(){ Description = [""]},
+                    ]
+                }
+
+        };
+    }
+
 
     private void DeleteCourse(Course course)
     {

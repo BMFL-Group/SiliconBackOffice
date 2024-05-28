@@ -1,0 +1,53 @@
+﻿.create-account {
+
+    .container {
+        height: calc(90vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .content {
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+
+            p {
+                margin-bottom: 25px;
+            }
+            #forgot {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+                margin-bottom: 40px;
+            }
+
+            .networks {
+                text-align: center;
+                margin-top: 30px;
+
+                label {
+                    font-weight: 600;
+                    font-size: 16px;
+                    color: var(--color-gray-900);
+                    margin-bottom: 30px;
+                    margin-right: 20px;
+                }
+
+                a {
+                    text-decoration: none;
+                    width: 100%;
+                }
+
+                .buttons {
+                    display: flex;
+                    gap: 20px;
+
+                    button {
+                        box-shadow: none;
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -527,8 +527,66 @@ h6, .h6 {
 }
 
 /*@import 'components/_links.scss';
-@import 'components/_profile-menu.scss';
-@import 'components/_statusMessages.scss';*/
+@import 'components/_profile-menu.scss';*/
+.error-message {
+  background-color: rgba(239, 68, 68, 0.1254901961);
+  border: 2px solid var(--color-danger);
+  border-radius: 0.5rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+  padding: 0.2rem 0.5rem;
+  margin: 2rem 0 1rem;
+}
+@media (min-width: 768px) {
+  .error-message {
+    line-height: 160%;
+    font-weight: 400;
+    color: var(--color-gray-700);
+    font-family: var(--font-manrope);
+    font-size: 1rem !important;
+    color: var(--color-danger);
+  }
+}
+@media (min-width: 992px) {
+  .error-message {
+    line-height: 160%;
+    font-weight: 400;
+    color: var(--color-gray-700);
+    font-family: var(--font-manrope);
+    font-size: 1.125rem !important;
+    color: var(--color-danger);
+  }
+}
+
+.success-message {
+  background-color: rgba(34, 197, 94, 0.1254901961);
+  border: 2px solid var(--color-success);
+  border-radius: 0.5rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-gray-700);
+  padding: 0.2rem 0.5rem;
+}
+@media (min-width: 768px) {
+  .success-message {
+    line-height: 160%;
+    font-weight: 400;
+    color: var(--color-gray-700);
+    font-family: var(--font-manrope);
+    font-size: 1rem !important;
+  }
+}
+@media (min-width: 992px) {
+  .success-message {
+    line-height: 160%;
+    font-weight: 400;
+    color: var(--color-gray-700);
+    font-family: var(--font-manrope);
+    font-size: 1.125rem !important;
+  }
+}
+
 .input-group {
   /*    span {
 
@@ -737,6 +795,86 @@ h6, .h6 {
 /*// cookieConsent*/
 /*@import 'sections/_cookieConsent.scss';
 */
+.create-account .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+.create-account .container .content {
+  max-width: 700px;
+  width: 100%;
+}
+.create-account .container .content p {
+  margin-bottom: 25px;
+}
+.create-account .container .content form .name {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .create-account .container .content form .name {
+    flex-direction: row;
+    gap: 20px;
+  }
+}
+.create-account .container .content form .checkbox-group {
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+.create-account .container .content form button {
+  width: 100%;
+  box-shadow: 0px 8px 18px -8px rgba(99, 102, 241, 0.9);
+  margin-top: 20px;
+}
+
+.create-account .container {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.create-account .container .content {
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+}
+.create-account .container .content p {
+  margin-bottom: 25px;
+}
+.create-account .container .content #forgot {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+.create-account .container .content .networks {
+  text-align: center;
+  margin-top: 30px;
+}
+.create-account .container .content .networks label {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--color-gray-900);
+  margin-bottom: 30px;
+  margin-right: 20px;
+}
+.create-account .container .content .networks a {
+  text-decoration: none;
+  width: 100%;
+}
+.create-account .container .content .networks .buttons {
+  display: flex;
+  gap: 20px;
+}
+.create-account .container .content .networks .buttons button {
+  box-shadow: none;
+  width: 100%;
+}
+
 .courses .container-test {
   margin: 0 1rem;
   display: grid;
@@ -755,6 +893,9 @@ h6, .h6 {
 }
 .courses .container-test .course-form {
   grid-area: course-form;
+}
+.courses .container-test .course-form .load-text {
+  margin: 3rem 0;
 }
 .courses .container-test .grid-item {
   position: relative;
@@ -881,8 +1022,11 @@ h6, .h6 {
   margin: 0 1rem 0 0;
 }
 .courses .container-test .courses-form {
-  background: var(--color-gray-200);
+  background: var(--color-gray-300);
   padding: 2rem;
+  /*            what-you-learn {
+
+              }*/
 }
 .courses .container-test .courses-form .form-group {
   margin: 0.5rem 0;
@@ -904,45 +1048,43 @@ h6, .h6 {
 .courses .container-test .courses-form .checkbox-wrapper .checkbox-group {
   margin: 0 2rem 0 0;
 }
-.courses .container-test .courses-form .categories-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 1rem;
-}
-.courses .container-test .courses-form .categories-group .form-group {
-  margin: 0;
-}
-.courses .container-test .courses-form .price-wrapper {
+.courses .container-test .courses-form .form-wrapper {
+  width: 100%;
   display: flex;
   gap: 0 1rem;
 }
-.courses .container-test .courses-form .misc-wrapper {
-  display: flex;
-  gap: 0 1rem;
+.courses .container-test .courses-form .form-wrapper .form-group {
+  width: 100%;
 }
-.courses .container-test .courses-form .authors-group {
+.courses .container-test .courses-form .input-wrapper {
   display: flex;
   gap: 0.5rem 0;
 }
-.courses .container-test .courses-form .content-group .program-details-group {
-  display: flex;
+.courses .container-test .courses-form .content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0 1rem;
+}
+.courses .container-test .courses-form .program-details-group {
+  display: block;
+  gap: 0 1rem;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr 3fr;
+  border-bottom: 1px solid var(--color-gray-500);
+  padding: 0.5rem 0 1rem 0;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper:first-child {
+  border-top: 1px solid var(--color-gray-500);
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper:last-child {
+  margin: 0 0 1rem 0;
+}
+.courses .container-test .courses-form .program-details-group .form-wrapper .form-group {
+  margin: 0;
 }
 
-/*    .courses .container .text-center {
-        grid-area: main-text;
-    }
-
-    .courses .container .courses-aside {
-        grid-area: aside;
-    }
-
-    .courses .container .grid-item {
-        grid-area: courses-content;
-    }
-
-    .courses .container .course-form {
-        grid-area: course-form;
-    }*/
 html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
