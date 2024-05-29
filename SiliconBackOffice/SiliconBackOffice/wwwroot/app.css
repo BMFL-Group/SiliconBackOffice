@@ -873,14 +873,17 @@ h6, .h6 {
   margin: 0 1rem;
   display: grid;
   grid-template-columns: auto 1fr 1fr;
-  grid-template-areas: "main-text main-text main-text" "course-box course-form course-form" "aside course-form course-form" ". course-form course-form" ". course-form course-form";
+  grid-template-areas: "main-text main-text main-text" "aside course-form course-form" "course-box course-form course-form" ". course-form course-form" ". course-form course-form";
   gap: 2rem 10rem;
 }
-.courses .container-test .text-center {
+.courses .container-test .page-title {
   grid-area: main-text;
 }
 .courses .container-test .courses-aside {
   grid-area: aside;
+}
+.courses .container-test .courses-aside thead tr:first-child {
+  border-bottom: 1px solid var(--color-gray-900);
 }
 .courses .container-test .grid-item {
   grid-area: course-box;
@@ -1018,9 +1021,6 @@ h6, .h6 {
 .courses .container-test .courses-form {
   background: var(--color-gray-300);
   padding: 2rem;
-  /*            what-you-learn {
-
-              }*/
 }
 .courses .container-test .courses-form .form-group {
   margin: 0.5rem 0;
@@ -1065,7 +1065,7 @@ h6, .h6 {
 }
 .courses .container-test .courses-form .program-details-group .form-wrapper {
   display: grid;
-  grid-template-columns: 1fr 2fr 3fr;
+  grid-template-columns: 1fr 6fr 8fr;
   border-bottom: 1px solid var(--color-gray-500);
   padding: 0.5rem 0 1rem 0;
 }

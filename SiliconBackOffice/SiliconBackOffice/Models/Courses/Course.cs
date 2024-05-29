@@ -20,7 +20,6 @@ public class Course
     public int NumberOfLikes { get; set; }
     public virtual List<Author>? Authors { get; set; }
     public virtual Content? Content { get; set; }
-    public virtual ProgramDetails? ProgramDetails { get; set; }
 }
 
 public class Author
