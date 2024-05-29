@@ -300,6 +300,7 @@
             else
             {
                 <button @onclick="() => HandleUpdateCourse(_course)">Save Course</button>                
+                <button @onclick=" () => HandleDeleteCourse(_course)">Delete Course</button>
             }
             <button type="reset">Cancel</button>
         </EditForm>
@@ -326,11 +327,34 @@
     {
         var course = CourseFactory.ConvertToCourse(formCourse);
         var updatedCourse = await _courseService.UpdateOneCourseAsync(course);
+        if (updatedCourse != null)
+        {
+            StateHasChanged();
+            // navigationManager.NavigateTo(navigationManager.Uri);
+        }
     }
 
     private async Task HandleCreateCourse(FormCourseModel formCourse)
     {
         var course = CourseFactory.ConvertToCourse(formCourse);
-        var updatedCourse = await _courseService.CreateOneCourseAsync(course);
+        var createdCourse = await _courseService.CreateOneCourseAsync(course);
+        if (createdCourse != null)
+        {
+            StateHasChanged();
+            // navigationManager.NavigateTo(navigationManager.Uri);
+        }
+    }
+
+    private async Task HandleDeleteCourse(FormCourseModel formCourse)
+    {
+        if(formCourse.Id != null)
+        {
+            var deletedCourse = await _courseService.DeleteOneCourseAsync(formCourse.Id);
+            if (deletedCourse == false)
+            {
+                StateHasChanged();
+                navigationManager.NavigateTo(navigationManager.Uri);
+            }            
+        }
     }
 }

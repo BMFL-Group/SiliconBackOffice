@@ -303,7 +303,6 @@ public class CourseService
 
     }
 
-
     public async Task<Course> UpdateOneCourseAsync(Course course)
     {
         try
@@ -375,5 +374,51 @@ public class CourseService
         }
         catch (Exception ex) { }
         return null!;
+    }
+
+    public async Task<bool> DeleteOneCourseAsync(string id)
+    {
+        try
+        {
+            #region GRAPHQL QUERY
+            //var query = new
+            //{
+            //    query = @"
+            //        mutation ($id: StringInput!) {
+            //            deleteCourse(id: $id) {
+            //                id
+            //                title
+            //            }
+            //        }",
+            //    variables = new
+            //    {
+            //        id = courseId
+            //    }
+            //};
+
+            var query = new
+            {
+                query = @"
+                mutation ($courseId: String!) {
+                    deleteCourse(courseId: $courseId)
+                }",
+                variables = new
+                {
+                    courseId = id
+                }
+            };
+
+            var queryJson = JsonConvert.SerializeObject(query);
+            var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
+
+            var deleteCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
+            if (deleteCourseResponse.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            #endregion
+        }
+        catch (Exception ex) { }
+        return false;
     }
 }
