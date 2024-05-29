@@ -41,13 +41,13 @@
                             </td>
                         </tr>
                     }
-                }
+                }                
             </tbody>
         </table>
 
         <_CoursesBox _course="_courseById" />
 
-        <_CoursesForm _course="_courseById" />
+        <_CoursesForm _course="_formCourse" />
 
     </div>
 </section>
@@ -55,6 +55,7 @@
 @code {
     private IEnumerable<Course> _courses { get; set; } = [];
     private Course? _courseById { get; set; }
+    private FormCourseModel? _formCourse { get; set; }
     private IEnumerable<CategoryModel> _categories { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
@@ -72,33 +73,14 @@
         if (result != null)
         {
             _courseById = result;
+            _formCourse = CourseFactory.ConvertToFormCourse(result);
         }
     }
 
     public async Task CreateNewcCurse()
     {
-        _courseById = new Course()
-            {
-                Categories = ["", "", "", ""],
-                Authors = [
-                    new Author(),
-                    new Author()
-                ],
-                Content = new()
-                {
-                    Courseincludes = [string.Empty, string.Empty, string.Empty, string.Empty],
-                    WhatYouLearn = ["", "", "", ""],
-                    ProgramDetails = [
-                        new ProgramDetails(){ Description = []},
-                        new ProgramDetails(){ Description = []},
-                        new ProgramDetails(){ Description = []},
-                        new ProgramDetails(){ Description = []},
-                        new ProgramDetails(){ Description = []},
-                        new ProgramDetails(){ Description = []},
-                    ]
-                }
-
-        };
+        _courseById = new();
+        _formCourse = new();
     }
 
 

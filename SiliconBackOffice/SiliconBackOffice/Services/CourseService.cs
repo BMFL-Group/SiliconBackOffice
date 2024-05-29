@@ -278,14 +278,14 @@ public class CourseService
                     }
                 }
             };
-
+            
             var queryJson = JsonConvert.SerializeObject(query);
             var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
 
-            var updateCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
-            if (updateCourseResponse.IsSuccessStatusCode)
+            var createCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
+            if (createCourseResponse.IsSuccessStatusCode)
             {
-                var json = await updateCourseResponse.Content.ReadAsStringAsync();
+                var json = await createCourseResponse.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<GraphQLResponse>(json);
                 if (result != null && result.Data != null && result.Data.GetCourseById != null)
                 {
@@ -357,7 +357,7 @@ public class CourseService
             var queryJson = JsonConvert.SerializeObject(query);
             var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
 
-            var updateCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlBackEnd"]}", content);
+            var updateCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
             if (updateCourseResponse.IsSuccessStatusCode)
             {
                 var json = await updateCourseResponse.Content.ReadAsStringAsync();
