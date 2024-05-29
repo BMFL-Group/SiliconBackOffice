@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SiliconBackOffice.Components.Pages;
 using SiliconBackOffice.Models.SavedCourses;
 using System.Diagnostics;
 using System.Text;
@@ -16,6 +18,31 @@ public class SavedCoursesService
         _configuration = configuration;
     }
 
+    #region CreateSavedCoursesAsync
+    public async Task<IActionResult> CreateSavedCoursesAsync(SavedCoursesModel savedCourse)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(savedCourse);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"{_configuration.GetConnectionString("SavedCoursesApi")}api/SavedCourses", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                
+            }
+        }
+        catch (Exception ex)
+        {
+
+            Debug.WriteLine(ex.Message);
+        }
+        return null!;
+    }
+
+    #endregion
+
+    #region GetSavedCoursesAsync
     public async Task<IEnumerable<SavedCoursesModel>> GetSavedCoursesAsync(string userId)
     {
         try
@@ -35,7 +62,9 @@ public class SavedCoursesService
         }
         return null!;
     }
+    #endregion
 
+    #region UpdateSavedCourses
     public async Task<bool> UpdateSavedCourses(SavedCoursesModel savedCourse)
     {
         try
@@ -56,7 +85,9 @@ public class SavedCoursesService
         }
         return false;
     }
+    #endregion
 
+    #region DeleteSavedCourses
     public async Task<bool> DeleteSavedCourses(SavedCoursesModel savedCourse)
     {
         try
@@ -75,4 +106,5 @@ public class SavedCoursesService
         }
         return false;
     }
+    #endregion
 }

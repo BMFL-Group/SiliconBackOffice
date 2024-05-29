@@ -19,6 +19,50 @@
     </ChildContent>
 </EditForm>
 
+<EditForm Model="@_createSavedCourse">
+    <ChildContent>
+        <div class="find-email">
+            <label>Email</label>
+            <InputText @bind-Value="_createSavedCourse.Email" />
+
+        </div>
+        <div class="find-email">
+            @if (_courses != null)
+            {
+                <InputSelect @bind-Value="_courses">
+                    <option value="">-- Select a Course --</option>
+                    @foreach (var course in _courses)
+                    {
+                        <option @onclick="() => SelectCourseId(course.Id) ">
+                            @course.Title
+                        </option>
+                    }
+                </InputSelect>
+            }
+               
+                
+            <label>CourseId</label>
+            <InputText @bind-Value="_createSavedCourse.CourseId" />
+
+        </div>
+        <div class="find-email">
+            <label>IsBookmarked</label>
+            <InputCheckbox @bind-Value="_createSavedCourse.IsBookmarked" />
+
+        </div>
+        <div class="find-email">
+            <label>HasJoined</label>
+            <InputCheckbox @bind-Value="_createSavedCourse.HasJoined" />
+
+        </div>
+        <div>
+            <button class="btn-theme" @onclick=" () => PopulateCourses(_createSavedCourse.Email)">Populate courses</button>
+            <button class="btn-theme" @onclick=" () => CreateSavedCourse(_createSavedCourse)">Create user</button>
+        </div>
+
+    </ChildContent>
+</EditForm>
+
 @if (_savedCourses == null)
 {
     <div>Loading ....</div>
@@ -86,6 +130,8 @@ else
     public ApplicationUser? _user { get; set; }
     public SavedCoursesEmailModel _email { get; set; } = new();
 
+    public CreateSavedCourseModel _createSavedCourse { get; set; } = new();
+
 
     // protected override async Task OnInitializedAsync()
     // {
@@ -128,5 +174,64 @@ else
                 _courses = result.Courses;
             }
         }
+    }
+
+    private async Task PopulateCourses(string email)
+    {
+        _user = await _userManager.FindByEmailAsync(email);
+
+        if (_user != null)
+        {
+            _savedCourses = await _savedCoursesService.GetSavedCoursesAsync(_user.Id);
+            var result = await _courseService.GetCourseIdAndTitle();
+            if (result != null)
+            {
+                List<Course> coursesToChooseFrom = [];
+
+                foreach (var course in result.Courses)
+                {
+                    if (!_savedCourses.Any(x => x.CourseId == course.Id))
+                    {
+                        coursesToChooseFrom.Add(course);
+                    }
+                }
+                _courses = coursesToChooseFrom;
+            }
+        }
+
+    }
+
+    private async Task CreateSavedCourse(CreateSavedCourseModel model)
+    {
+        _user = await _userManager.FindByEmailAsync(model.Email);
+        // var savedCourses = await _savedCoursesService.GetSavedCoursesAsync(_user.Id);
+        // List<string> currentCourses = new List<string>();
+
+        // foreach (var course in savedCourses)
+        // {
+        //     if (course.CourseId == model.CourseId)
+        //     {
+
+        //     }   
+        // }
+        if (_user != null && model != null)
+        {
+            var savedCourseToCreate = new SavedCoursesModel()
+                {
+                    UserId = _user.Id,
+                    CourseId = model.CourseId,
+                    IsBookmarked = model.IsBookmarked,
+                    HasJoined = model.HasJoined
+                };
+
+            var result = await _savedCoursesService.CreateSavedCoursesAsync(savedCourseToCreate);
+        }      
+    }
+
+    private void SelectCourseId(string id)
+    {
+        _createSavedCourse.CourseId = id;
+
+        StateHasChanged();
     }
 }
