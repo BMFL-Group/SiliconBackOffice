@@ -63,7 +63,7 @@
             UserRole = await _userManager.GetRolesAsync(User);
             Roles = await _roleManager.Roles.ToListAsync();
 
-            if (UserRole != null && Roles.Count > 0 && Roles.Any(role => UserRole.Contains(role.ToString())))
+            if (UserRole != null && Roles.Count > 0 && UserRole.Any(role => role != "User"))
             {
                 var result = await _signInManager.PasswordSignInAsync(SignInForm.Email, SignInForm.Password, SignInForm.Remember, lockoutOnFailure: false);
                 if (result.Succeeded)
