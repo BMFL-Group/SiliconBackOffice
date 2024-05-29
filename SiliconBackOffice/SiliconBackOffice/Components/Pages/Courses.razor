@@ -1,5 +1,4 @@
 ﻿@page "/courses"
-@using Microsoft.AspNetCore.Authorization
 
 @rendermode InteractiveServer
 @attribute [StreamRendering]
@@ -7,15 +6,21 @@
 
 <PageTitle>Courses</PageTitle>
 
-<section class="courses">
+<section id="coursesStart" class="courses">
     <div class="container-test">
         <div class="page-title">
             <h1>Courses Management</h1>
             <p class="lead">Manage courses, descriptions, content, and categories.</p>
-            
-            <button class="btn btn-theme" @onclick="CreateNewcCurse">Create New Course</button>
+
+            <div class="status-wrapper">
+                <button class="btn btn-theme" @onclick="CreateNewcCourse">Create New Course</button>
+                @if (_statusMessage != null)
+                {
+                    <div class="course-status btn btn-success">@_statusMessage</div>
+                }
+            </div>
         </div>
-        
+
 
         <table class="table table-hover courses-aside">
             <thead class="thead-dark">
@@ -47,8 +52,8 @@
 
         <_CoursesBox _course="_courseById" />
 
-        <_CoursesForm _course="_formCourse" />
-
+        <_CoursesForm _course="_formCourse" OnNotifyParent="HandleNotification" />
+                
     </div>
 </section>
 
@@ -58,6 +63,10 @@
     private FormCourseModel? _formCourse { get; set; }
     private IEnumerable<CategoryModel> _categories { get; set; } = [];
 
+    [SupplyParameterFromQuery]
+    public string? _statusMessage { get; set; }
+
+
     protected override async Task OnInitializedAsync()
     {
         var result = await _courseService.GetAllCoursesAsync("", "", 1, 999);
@@ -65,10 +74,13 @@
         {
             _courses = result.Courses;            
         }
+        _formCourse = null!;
+        _courseById = null!;
     }
 
     private async Task EditCourse(Course course)
     {
+        _statusMessage = null!;
         var result = await _courseService.GetOneCourseByIdAsync(course.Id);
         if (result != null)
         {
@@ -77,16 +89,16 @@
         }
     }
 
-    public async Task CreateNewcCurse()
+    public void CreateNewcCourse()
     {
+        _statusMessage = null!;
         _courseById = new();
         _formCourse = new();
+        navigationManager.NavigateTo(navigationManager.BaseUri + "courses#courseForm");
     }
 
-
-    private void DeleteCourse(Course course)
+    public void HandleNotification()
     {
-
-        //courses.Remove(course);
+        EditCourse(_courseById);
     }
 }

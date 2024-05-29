@@ -1,14 +1,28 @@
 ﻿.courses {
+
+
     .container-test {
         margin: 0 1rem;
         display: grid;
         grid-template-columns: auto 1fr 1fr;
         grid-template-areas:
-            'main-text main-text main-text' 'aside course-form course-form' 'course-box course-form course-form' '. course-form course-form' '. course-form course-form';
+            /*'page-title page-title page-title' 'aside course-form course-form' 'course-box course-form course-form' '. course-form course-form' '. course-form course-form';*/
+            'page-title page-title page-title' 'aside aside course-box' 'course-form course-form course-form';
         gap: 2rem 10rem;
 
         .page-title {
-            grid-area: main-text;
+            grid-area: page-title;
+
+            .status-wrapper {
+                display: flex;
+                gap: 1rem;
+                
+                .course-status {
+                    background-color: var(--color-success);
+                    border-radius: 0.5rem;
+                    padding: 0.5rem 2rem;
+                }
+            }
         }
 
         .courses-aside {
@@ -27,11 +41,17 @@
             grid-area: course-box;
         }
 
-        .course-form {
+        .course-wrapper {
             grid-area: course-form;
+            margin: 2rem 0;
 
             .load-text {
                 margin: 3rem 0;
+            }
+
+            .button-wrapper {
+                display: flex;
+                gap: 1rem;
             }
         }
 
