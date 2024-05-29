@@ -282,7 +282,7 @@ public class CourseService
             var queryJson = JsonConvert.SerializeObject(query);
             var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
 
-            var createCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
+            var createCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlBackEnd"]}", content);
             if (createCourseResponse.IsSuccessStatusCode)
             {
                 var json = await createCourseResponse.Content.ReadAsStringAsync();
@@ -356,7 +356,7 @@ public class CourseService
             var queryJson = JsonConvert.SerializeObject(query);
             var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
 
-            var updateCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
+            var updateCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlBackEnd"]}", content);
             if (updateCourseResponse.IsSuccessStatusCode)
             {
                 var json = await updateCourseResponse.Content.ReadAsStringAsync();
@@ -411,7 +411,7 @@ public class CourseService
             var queryJson = JsonConvert.SerializeObject(query);
             var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
 
-            var deleteCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
+            var deleteCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlBackEnd"]}", content);
             if (deleteCourseResponse.IsSuccessStatusCode)
             {
                 return true;
