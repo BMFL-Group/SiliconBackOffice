@@ -172,6 +172,7 @@
 @code {
     private IEnumerable<NewsletterModel> subscribers;
 
+
     protected override async Task OnInitializedAsync()
     {
         subscribers = await NewsletterService.GetSubscribersAsync();
@@ -192,11 +193,16 @@
 
     private async Task Unsubscribe(string email)
     {
-        var success = await NewsletterService.UnsubscribeAsync(email);
+        bool success = await NewsletterService.UnsubscribeAsync(email);
         if (success)
         {
-            subscribers = subscribers.Where(sub => sub.email != email).ToList();
-            StateHasChanged();
+            subscribers = subscribers.Where(s => s.email != email);
+            StateHasChanged(); // Refresh the UI
+        }
+        else
+        {
+            // Handle failure
         }
     }
+
 }
