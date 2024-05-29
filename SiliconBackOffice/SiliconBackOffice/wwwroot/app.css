@@ -873,11 +873,20 @@ h6, .h6 {
   margin: 0 1rem;
   display: grid;
   grid-template-columns: auto 1fr 1fr;
-  grid-template-areas: "main-text main-text main-text" "aside course-form course-form" "course-box course-form course-form" ". course-form course-form" ". course-form course-form";
+  grid-template-areas: "page-title page-title page-title" "aside aside course-box" "course-form course-form course-form";
   gap: 2rem 10rem;
 }
 .courses .container-test .page-title {
-  grid-area: main-text;
+  grid-area: page-title;
+}
+.courses .container-test .page-title .status-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+.courses .container-test .page-title .status-wrapper .course-status {
+  background-color: var(--color-success);
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem;
 }
 .courses .container-test .courses-aside {
   grid-area: aside;
@@ -888,11 +897,16 @@ h6, .h6 {
 .courses .container-test .grid-item {
   grid-area: course-box;
 }
-.courses .container-test .course-form {
+.courses .container-test .course-wrapper {
   grid-area: course-form;
+  margin: 2rem 0;
 }
-.courses .container-test .course-form .load-text {
+.courses .container-test .course-wrapper .load-text {
   margin: 3rem 0;
+}
+.courses .container-test .course-wrapper .button-wrapper {
+  display: flex;
+  gap: 1rem;
 }
 .courses .container-test .grid-item {
   position: relative;

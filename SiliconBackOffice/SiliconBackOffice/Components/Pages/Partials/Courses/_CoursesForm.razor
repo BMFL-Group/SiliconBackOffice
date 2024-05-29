@@ -1,13 +1,13 @@
 ﻿@attribute [StreamRendering]
 
-<div class="course-form">
+<div class="course-wrapper">
     @if (_course == null)
     {
         <h6 class="load-text">Click a "view/edit" button to see course details</h6>
     }
     else
     {
-        <EditForm Model="_course" class="form-control courses-form">
+        <EditForm Model="_course" id="courseForm" class="form-control courses-form">
             <h4>Course content</h4>
 
             <div class="form-wrapper">
@@ -293,16 +293,18 @@
                     <InputText @bind-Value="_course.ProgramDetail6Description2" class="form-control" />
                 </div>
             </div>
-            @if (string.IsNullOrEmpty(_course.Id))
-            {
-                <button @onclick="() => HandleCreateCourse(_course)">Create Course</button>
-            }
-            else
-            {
-                <button @onclick="() => HandleUpdateCourse(_course)">Save Course</button>                
-                <button @onclick=" () => HandleDeleteCourse(_course)">Delete Course</button>
-            }
-            <button type="reset">Cancel</button>
+            <div class="button-wrapper">
+                @if (string.IsNullOrEmpty(_course.Id))
+                {
+                    <button class="btn btn-success" @onclick="() => HandleCreateCourse(_course)">Create Course</button>
+                }
+                else
+                {
+                    <button class="btn btn-theme" @onclick="() => HandleUpdateCourse(_course)">Save Course</button>
+                    <button class="btn btn-delete-all" @onclick=" () => HandleDeleteCourse(_course)">Delete Course</button>
+                }
+                <button class="btn btn-warning" type="reset">Cancel</button>
+            </div>
         </EditForm>
 
     }
@@ -313,9 +315,12 @@
 @code {
     [Parameter]
     public FormCourseModel _course { get; set; }
-    //public Course? _course { get; set; }
 
     private EditContext? _editContext;
+
+    [Parameter]
+    public EventCallback OnNotifyParent { get; set; }
+
 
     protected override void OnInitialized()
     {
@@ -329,8 +334,9 @@
         var updatedCourse = await _courseService.UpdateOneCourseAsync(course);
         if (updatedCourse != null)
         {
-            StateHasChanged();
-            // navigationManager.NavigateTo(navigationManager.Uri);
+            string message = "Course updated";
+            await NotifyParent();
+            navigationManager.NavigateTo(navigationManager.BaseUri + $"courses?_statusMessage={message}#top");
         }
     }
 
@@ -340,8 +346,10 @@
         var createdCourse = await _courseService.CreateOneCourseAsync(course);
         if (createdCourse != null)
         {
-            StateHasChanged();
-            // navigationManager.NavigateTo(navigationManager.Uri);
+            string message = "Course created";
+            await NotifyParent();
+            navigationManager.NavigateTo(navigationManager.BaseUri + $"courses?_statusMessage={message}#top", forceLoad: true);
+
         }
     }
 
@@ -350,11 +358,20 @@
         if(formCourse.Id != null)
         {
             var deletedCourse = await _courseService.DeleteOneCourseAsync(formCourse.Id);
-            if (deletedCourse == false)
+            if (deletedCourse == true)
             {
-                StateHasChanged();
-                navigationManager.NavigateTo(navigationManager.Uri);
-            }            
+                string message = "Course deleted";
+                await NotifyParent();
+                navigationManager.NavigateTo(navigationManager.BaseUri + $"courses?_statusMessage={message}#top", forceLoad: true);
+            }
+        }
+    }
+
+    private async Task NotifyParent()
+    {
+        if (OnNotifyParent.HasDelegate)
+        {
+            await OnNotifyParent.InvokeAsync(null);
         }
     }
 }

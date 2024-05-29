@@ -18,6 +18,9 @@ public class CourseService
         _configuration = configuration;
     }
 
+    public event Action OnCoursesChange;
+    public void NotifyStateChanged() => OnCoursesChange?.Invoke();
+
     public async Task<CourseResult> GetCourseIdAndTitle()
     {
         try
