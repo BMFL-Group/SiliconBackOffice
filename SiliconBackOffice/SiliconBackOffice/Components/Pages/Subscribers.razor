@@ -172,6 +172,7 @@
 @code {
     private IEnumerable<NewsletterModel> subscribers;
 
+
     protected override async Task OnInitializedAsync()
     {
         subscribers = await NewsletterService.GetSubscribersAsync();
