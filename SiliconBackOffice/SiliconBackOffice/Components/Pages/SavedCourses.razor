@@ -8,7 +8,7 @@
 
 <h1>Saved courses</h1>
 
-<EditForm Model="@_email" >
+<EditForm Model="@_email">
     <ChildContent>
         <div class="find-email">
             <label>Type in user email to find your courses</label>
@@ -19,7 +19,7 @@
     </ChildContent>
 </EditForm>
 
-<EditForm Model="@_createSavedCourse">
+<EditForm Model="_createSavedCourse">
     <ChildContent>
         <div class="find-email">
             <label>Email</label>
@@ -29,29 +29,36 @@
         <div class="find-email">
             @if (_courses != null)
             {
-                <InputSelect @bind-Value="_courses">
+                <InputSelect @bind-Value="_createSavedCourse.CourseId">
                     <option value="">-- Select a Course --</option>
+                    @foreach (var course in _courses)
+                    {
+                        <option value="@course.Id">@course.Title</option>
+                    }
+                </InputSelect>
+               @*  <InputSelect @bind-Value="_courses">
+                    <option>-- Select a Course --</option>
                     @foreach (var course in _courses)
                     {
                         <option @onclick="() => SelectCourseId(course.Id) ">
                             @course.Title
                         </option>
                     }
-                </InputSelect>
+                </InputSelect> *@
             }
-               
-                
+
+
             <label>CourseId</label>
             <InputText @bind-Value="_createSavedCourse.CourseId" />
 
         </div>
         <div class="find-email">
-            <label>IsBookmarked</label>
+            <label>Is Bookmarked</label>
             <InputCheckbox @bind-Value="_createSavedCourse.IsBookmarked" />
 
         </div>
         <div class="find-email">
-            <label>HasJoined</label>
+            <label>Has Joined</label>
             <InputCheckbox @bind-Value="_createSavedCourse.HasJoined" />
 
         </div>
@@ -59,9 +66,11 @@
             <button class="btn-theme" @onclick=" () => PopulateCourses(_createSavedCourse.Email)">Populate courses</button>
             <button class="btn-theme" @onclick=" () => CreateSavedCourse(_createSavedCourse)">Create user</button>
         </div>
-
+        
     </ChildContent>
 </EditForm>
+
+
 
 @if (_savedCourses == null)
 {
@@ -84,13 +93,12 @@ else
                                 <label id="user-id-label">User Name</label>
                                 <InputText @bind-Value="_user.Email" id="user-id-input" readonly />
                             }
-                        }
-                     
+                        }                    
                     </div>
+
                     <div class="form-group-saved-courses-id">
                         <label id="course-id-label">Course Id</label>
                         <InputText @bind-Value="savedCourse.CourseId" id="course-id-input" readonly />
-
                         @if (_courses != null && _courses.Any())
                         {
                             foreach (var course in _courses)
@@ -102,8 +110,8 @@ else
                                 }                                
                             }
                         }
-
                     </div>
+
                     <div class="checkbox-wrapper">
                         <div class="checkbox-group-form">
                             <label id="bookmark-lable">Bookmarked</label>
@@ -135,6 +143,10 @@ else
 
     // protected override async Task OnInitializedAsync()
     // {
+    //     if (_createSavedCourse == null)
+    //     {
+    //         _createSavedCourse = new();
+    //     }
     //     _user = await _userManager.FindByEmailAsync("bjornandersson84@gmail.com");
 
     //     if (_user != null)
@@ -184,18 +196,14 @@ else
         {
             _savedCourses = await _savedCoursesService.GetSavedCoursesAsync(_user.Id);
             var result = await _courseService.GetCourseIdAndTitle();
-            if (result != null)
+            if (result != null && _savedCourses != null)
             {
-                List<Course> coursesToChooseFrom = [];
+                _courses = result.Courses.Where(c => !_savedCourses!.Any(sc => sc.CourseId == c.Id)).ToList();
 
-                foreach (var course in result.Courses)
-                {
-                    if (!_savedCourses.Any(x => x.CourseId == course.Id))
-                    {
-                        coursesToChooseFrom.Add(course);
-                    }
-                }
-                _courses = coursesToChooseFrom;
+            }
+            else
+            {
+                _courses = result!.Courses;
             }
         }
 
@@ -225,6 +233,7 @@ else
                 };
 
             var result = await _savedCoursesService.CreateSavedCoursesAsync(savedCourseToCreate);
+            await HandleUserEmail(model.Email);
         }      
     }
 

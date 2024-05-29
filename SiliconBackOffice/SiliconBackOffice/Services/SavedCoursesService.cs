@@ -19,7 +19,7 @@ public class SavedCoursesService
     }
 
     #region CreateSavedCoursesAsync
-    public async Task<IActionResult> CreateSavedCoursesAsync(SavedCoursesModel savedCourse)
+    public async Task<SavedCoursesModel> CreateSavedCoursesAsync(SavedCoursesModel savedCourse)
     {
         try
         {
@@ -29,7 +29,11 @@ public class SavedCoursesService
 
             if (response.IsSuccessStatusCode)
             {
-                
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var createdCourse = JsonConvert.DeserializeObject<SavedCoursesModel>(responseBody);
+
+                // Optionally, return some meaningful result
+                return createdCourse;
             }
         }
         catch (Exception ex)
