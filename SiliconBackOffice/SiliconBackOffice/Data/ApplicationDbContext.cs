@@ -7,6 +7,7 @@ namespace SiliconBackOffice.Data
     {
         public DbSet<AddressModel> Addresses { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -83,7 +83,12 @@ namespace SiliconBackOffice.Services
 
         public async Task<bool> UnsubscribeAsync(string email)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://newsletterprovider-bmfl.azurewebsites.net/api/Unsubscribe?code=nf9P6RZL4OXjbD3jR7W5dfIUVFwH4UlJK0Fb3RglfPAbAzFuOdFs1A%3D%3D&email={email}");
+            var json = JsonSerializer.Serialize(new { email });
+            var requestUri = "https://newsletterprovider-bmfl.azurewebsites.net/api/Unsubscribe?code=nf9P6RZL4OXjbD3jR7W5dfIUVFwH4UlJK0Fb3RglfPAbAzFuOdFs1A%3D%3D";
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
             var response = await _http.SendAsync(request);
             return response.IsSuccessStatusCode;
         }
