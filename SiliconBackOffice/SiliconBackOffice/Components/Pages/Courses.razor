@@ -1,4 +1,5 @@
 ﻿@page "/courses"
+@using Microsoft.AspNetCore.Authorization
 
 @rendermode InteractiveServer
 @attribute [StreamRendering]
@@ -8,12 +9,13 @@
 
 <section class="courses">
     <div class="container-test">
-        <div class="text-center">
+        <div class="page-title">
             <h1>Courses Management</h1>
             <p class="lead">Manage courses, descriptions, content, and categories.</p>
+            
+            <button class="btn btn-theme" @onclick="CreateNewcCurse">Create New Course</button>
         </div>
         
-        <button class="btn btn-theme" @onclick="CreateNewcCurse">Create New Course</button>
 
         <table class="table table-hover courses-aside">
             <thead class="thead-dark">
@@ -39,13 +41,13 @@
                             </td>
                         </tr>
                     }
-                }
+                }                
             </tbody>
         </table>
 
         <_CoursesBox _course="_courseById" />
 
-        <_CoursesForm _course="_courseById" />
+        <_CoursesForm _course="_formCourse" />
 
     </div>
 </section>
@@ -53,6 +55,7 @@
 @code {
     private IEnumerable<Course> _courses { get; set; } = [];
     private Course? _courseById { get; set; }
+    private FormCourseModel? _formCourse { get; set; }
     private IEnumerable<CategoryModel> _categories { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
@@ -70,33 +73,14 @@
         if (result != null)
         {
             _courseById = result;
+            _formCourse = CourseFactory.ConvertToFormCourse(result);
         }
     }
 
     public async Task CreateNewcCurse()
     {
-        _courseById = new Course()
-            {
-                Categories = ["", "", "", ""],
-                Authors = [
-                    new Author(),
-                    new Author()
-                ],
-                Content = new()
-                {
-                    Courseincludes = ["", "", "", ""],
-                    WhatYouLearn = ["", "", "", ""],
-                    ProgramDetails = [
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                        new ProgramDetails(){ Description = [""]},
-                    ]
-                }
-
-        };
+        _courseById = new();
+        _formCourse = new();
     }
 
 
