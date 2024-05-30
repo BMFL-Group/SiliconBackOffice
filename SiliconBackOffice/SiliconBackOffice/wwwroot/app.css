@@ -1013,6 +1013,7 @@ input {
   background-color: var(--color-success);
   border-radius: 0.5rem;
   padding: 0.5rem 2rem;
+  cursor: default;
 }
 .courses .container-test .courses-aside {
   grid-area: aside;
@@ -1036,7 +1037,8 @@ input {
 }
 .courses .container-test .grid-item {
   position: relative;
-  max-width: 420px;
+  max-width: 410px;
+  max-height: 450px;
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
@@ -1053,10 +1055,15 @@ input {
   transform: scale(99%, 99%);
   transition: all 0.3s ease-in;
 }
+.courses .container-test .grid-item .img-wrapper {
+  max-width: 420px;
+  max-height: 240px;
+  overflow: hidden;
+}
 .courses .container-test .grid-item .img-wrapper .course-image {
   width: 100%;
   height: auto;
-  aspect-ratio: 3.5/2;
+  aspect-ratio: 3.5/2 !important;
   object-fit: cover;
 }
 .courses .container-test .grid-item .img-wrapper .best-seller {
