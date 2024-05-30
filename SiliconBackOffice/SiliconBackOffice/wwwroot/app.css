@@ -910,6 +910,91 @@ h6, .h6 {
   border: none;
 }
 
+label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+input {
+  border-radius: 0.375rem;
+  width: 50%;
+  padding: 0.4rem;
+}
+
+.custom-checkbox {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.find-email-find-input button {
+  margin-top: 1rem;
+}
+
+.find-email-select-input {
+  margin-top: 1rem;
+}
+.find-email-select-input .dropdown {
+  width: 50%;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.find-email-select-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.find-email-select-checkbox .find-email {
+  display: flex;
+  gap: 10px;
+}
+
+.find-email-select-btn {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.saved-courses-form {
+  background-color: var(--color-gray-300);
+  margin: 1rem 0;
+}
+.saved-courses-form .form-wrapper-saved-courses {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  grid-gap: 1rem;
+  grid-template-areas: "courses users checkboxes";
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id input, .saved-courses-form .form-wrapper-saved-courses .form-group-saved-users-id input {
+  border-radius: 0.375rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id .form-group-saved-courses-id, .saved-courses-form .form-wrapper-saved-courses .form-group-saved-users-id .form-group-saved-courses-id {
+  grid-area: courses;
+}
+.saved-courses-form .form-wrapper-saved-courses .form-group-saved-courses-id .form-group-saved-users-id, .saved-courses-form .form-wrapper-saved-courses .form-group-saved-users-id .form-group-saved-users-id {
+  grid-area: users;
+}
+.saved-courses-form .form-wrapper-saved-courses .checkbox-wrapper {
+  grid-area: checkboxes;
+  display: flex;
+  flex-direction: column;
+}
+.saved-courses-form .form-wrapper-saved-courses .checkbox-wrapper .checkbox-group-form #has-joined-label {
+  margin-top: 1.3rem;
+}
+
 .courses .container-test {
   margin: 0 1rem;
   display: grid;

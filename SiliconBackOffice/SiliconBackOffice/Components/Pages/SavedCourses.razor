@@ -1,0 +1,209 @@
+﻿@page "/savedCourses"
+@using Microsoft.AspNetCore.Components.Forms
+
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>Saved Courses</PageTitle>
+
+<h1>Saved courses</h1>
+    <EditForm Model="@_email">
+        <ChildContent>
+            <div class="find-email-find">
+                <label>Type in user email to find your courses</label>
+                <div class="find-email-find-input">
+                    <InputText @bind-Value="_email.Email" />
+                <button class="btn-theme" @onclick=" () => HandleUserEmail(_email.Email)"><i class="fa-solid fa-magnifying-glass"></i> Find user</button>
+                </div>
+            </div>
+
+        </ChildContent>
+    </EditForm>
+
+
+
+    <EditForm Model="_createSavedCourse" class="find-email-select">
+        <ChildContent>
+            <div class="find-email-select-input">
+            <label>Type in user email to edit courses</label>
+                <div class="find-email">
+                    <label>Email</label>
+                    <InputText @bind-Value="_createSavedCourse.Email" />
+                </div>
+                <div class="find-email">
+                    @if (_courses != null)
+                    {
+                        <InputSelect class="dropdown" @bind-Value="_createSavedCourse.CourseId">
+                            <option value="">-- Select a Course --</option>
+                            @foreach (var course in _courses)
+                            {
+                                <option value="@course.Id">@course.Title</option>
+                            }
+                        </InputSelect>
+                    }
+                    <label>CourseId</label>
+                    <InputText @bind-Value="_createSavedCourse.CourseId" />
+                </div>
+            </div>
+            <div class="find-email-select-checkbox">
+                <div class="find-email">
+                    <label>Is Bookmarked</label>
+                <InputCheckbox class="custom-checkbox" @bind-Value="_createSavedCourse.IsBookmarked" />
+
+                </div>
+                <div class="find-email">
+                    <label>Has Joined</label>
+                <InputCheckbox class="custom-checkbox" @bind-Value="_createSavedCourse.HasJoined" />
+
+                </div>
+            </div>
+
+            <div class="find-email-select-btn">
+                <button class="btn-theme" @onclick=" () => PopulateCourses(_createSavedCourse.Email)">Populate courses</button>
+                <button class="btn-theme" @onclick=" () => CreateSavedCourse(_createSavedCourse)"><i class="fa-solid fa-plus"></i> Create user</button>
+            </div>
+
+        </ChildContent>
+    </EditForm>
+
+
+
+@if (_savedCourses == null)
+{
+    <div>Loading ....</div>
+}
+else
+{
+    @foreach (var savedCourse in _savedCourses)
+    {
+        <EditForm Model="@savedCourse" class="form-control saved-courses-form">
+            <ChildContent>             
+                <div class="form-wrapper-saved-courses">
+                    <div class="form-group-saved-users-id">
+                        <label id="user-id-label">User Id</label>
+                        <InputText @bind-Value="savedCourse.UserId" id="user-id-input" readonly />
+                        @if (_user != null)
+                        {
+                            if (_user.Id == savedCourse.UserId)
+                            {
+                                <label id="user-id-label">User Name</label>
+                                <InputText @bind-Value="_user.Email" id="user-id-input" readonly />
+                            }
+                        }                    
+                    </div>
+
+                    <div class="form-group-saved-courses-id">
+                        <label id="course-id-label">Course Id</label>
+                        <InputText @bind-Value="savedCourse.CourseId" id="course-id-input" readonly />
+                        @if (_courses != null && _courses.Any())
+                        {
+                            foreach (var course in _courses)
+                            {
+                                @if (savedCourse.CourseId == course.Id)
+                                {
+                                    <label id="course-id-label">Course Name</label>
+                                    <InputText @bind-Value="course.Title" id="course-id-input" readonly/>
+                                }                                
+                            }
+                        }
+                    </div>
+
+                    <div class="checkbox-wrapper">
+                        <div class="checkbox-group-form">
+                            <label id="bookmark-lable">Bookmarked</label>
+                            <InputCheckbox class="custom-checkbox" id="bookmark-input" @bind-Value="savedCourse.IsBookmarked" />
+                        </div>
+                        <div class="checkbox-group-form">
+                            <label id="has-joined-label">Has Joined</label>
+                            <InputCheckbox class="custom-checkbox" id="has-joined-input" @bind-Value="savedCourse.HasJoined" />
+                        </div>
+                    </div>
+                  
+                </div>
+
+                <button class="btn-theme" @onclick="() => HandleForm(savedCourse)"><i class="fa-regular fa-floppy-disk"></i> Save Changes</button>
+            </ChildContent>
+        </EditForm>
+    }
+
+}
+@code {
+    public IEnumerable<SavedCoursesModel>? _savedCourses { get; set; }
+    public IEnumerable<Course>? _courses { get; set; }
+    public ApplicationUser? _user { get; set; }
+    public SavedCoursesEmailModel _email { get; set; } = new();
+    public CreateSavedCourseModel _createSavedCourse { get; set; } = new();
+
+    private async Task HandleForm(SavedCoursesModel savedCourse)
+    {
+        if (savedCourse.HasJoined == false && savedCourse.IsBookmarked == false)
+        {
+            var response = await _savedCoursesService.DeleteSavedCourses(savedCourse);
+        }
+        else
+        {
+            var response = await _savedCoursesService.UpdateSavedCourses(savedCourse);
+        }
+    }
+
+    private async Task HandleUserEmail(string email)
+    {
+        _user = await _userManager.FindByEmailAsync(email);
+
+        if (_user != null)
+        {
+            _savedCourses = await _savedCoursesService.GetSavedCoursesAsync(_user.Id);
+            var result = await _courseService.GetCourseIdAndTitle();
+            if (result != null)
+            {
+                _courses = result.Courses;
+            }
+        }
+    }
+
+    private async Task PopulateCourses(string email)
+    {
+        _user = await _userManager.FindByEmailAsync(email);
+
+        if (_user != null)
+        {
+            _savedCourses = await _savedCoursesService.GetSavedCoursesAsync(_user.Id);
+            var result = await _courseService.GetCourseIdAndTitle();
+            if (result != null && _savedCourses != null)
+            {
+                _courses = result.Courses.Where(c => !_savedCourses!.Any(sc => sc.CourseId == c.Id)).ToList();
+
+            }
+            else
+            {
+                _courses = result!.Courses;
+            }
+        }
+    }
+
+    private async Task CreateSavedCourse(CreateSavedCourseModel model)
+    {
+        _user = await _userManager.FindByEmailAsync(model.Email);
+
+        if (_user != null && model != null)
+        {
+            var savedCourseToCreate = new SavedCoursesModel()
+                {
+                    UserId = _user.Id,
+                    CourseId = model.CourseId,
+                    IsBookmarked = model.IsBookmarked,
+                    HasJoined = model.HasJoined
+                };
+
+            var result = await _savedCoursesService.CreateSavedCoursesAsync(savedCourseToCreate);
+            await HandleUserEmail(model.Email);
+        }      
+    }
+
+    private void SelectCourseId(string id)
+    {
+        _createSavedCourse.CourseId = id;
+
+        StateHasChanged();
+    }
+}
