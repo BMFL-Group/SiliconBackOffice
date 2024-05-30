@@ -1,0 +1,60 @@
+﻿namespace SiliconBackOffice.Models.Courses;
+
+public class FormCourseModel
+{
+    public string? Id { get; set; }
+    public string Title { get; set; } = "defaultTitle";
+    public string Ingress { get; set; } = "defaultIngress";
+    public string ImageUri { get; set; } = "defaultImageUri";
+    public string AltText { get; set; } = "defaultAltText";
+    public bool BestSeller { get; set; } = false;
+    public bool IsDigital { get; set; } = true;
+    public string Category1 { get; set; } = "Category1";
+    public string Category2 { get; set; } = "Category2";
+    public string Category3 { get; set; } = "Category3";
+    public string Category4 { get; set; } = "Category4";
+    public string Currency { get; set; } = "USD";
+    public decimal Price { get; set; } = 0m;
+    public decimal DiscountPrice { get; set; } = 0m;
+    public string LengthInHours { get; set; } = "0";
+    public int RatingInPercentage { get; set; } = 0;
+    public int NumberOfReviews { get; set; } = 0;
+    public int NumberOfLikes { get; set; } = 0;
+    public string Author1Name { get; set; } = "Author1";
+    public string Author2Name { get; set; } = "Author2";
+    public string ContentDescription { get; set; } = "defaultDescription";
+    public string CourseInclude1 { get; set; } = "Include1";
+    public string CourseInclude2 { get; set; } = "Include2";
+    public string CourseInclude3 { get; set; } = "Include3";
+    public string CourseInclude4 { get; set; } = "Include4";
+    public string CourseInclude5 { get; set; } = "Include5";
+    public string WhatYouLearn1 { get; set; } = "Learn1";
+    public string WhatYouLearn2 { get; set; } = "Learn2";
+    public string WhatYouLearn3 { get; set; } = "Learn3";
+    public string WhatYouLearn4 { get; set; } = "Learn4";
+    public string WhatYouLearn5 { get; set; } = "Learn5";
+    public int? ProgramDetail1Id { get; set; } = 1;
+    public string ProgramDetail1Title { get; set; } = "ProgramDetail1";
+    public string ProgramDetail1Description1 { get; set; } = "Description1";
+    public string ProgramDetail1Description2 { get; set; } = "Description2";
+    public int? ProgramDetail2Id { get; set; } = 2;
+    public string ProgramDetail2Title { get; set; } = "ProgramDetail2";
+    public string ProgramDetail2Description1 { get; set; } = "Description1";
+    public string ProgramDetail2Description2 { get; set; } = "Description2";
+    public int? ProgramDetail3Id { get; set; } = 3;
+    public string ProgramDetail3Title { get; set; } = "ProgramDetail3";
+    public string ProgramDetail3Description1 { get; set; } = "Description1";
+    public string ProgramDetail3Description2 { get; set; } = "Description2";
+    public int? ProgramDetail4Id { get; set; } = 4;
+    public string ProgramDetail4Title { get; set; } = "ProgramDetail4";
+    public string ProgramDetail4Description1 { get; set; } = "Description1";
+    public string ProgramDetail4Description2 { get; set; } = "Description2";
+    public int? ProgramDetail5Id { get; set; } = 5;
+    public string ProgramDetail5Title { get; set; } = "ProgramDetail5";
+    public string ProgramDetail5Description1 { get; set; } = "Description1";
+    public string ProgramDetail5Description2 { get; set; } = "Description2";
+    public int? ProgramDetail6Id { get; set; } = 6;
+    public string ProgramDetail6Title { get; set; } = "ProgramDetail6";
+    public string ProgramDetail6Description1 { get; set; } = "Description1";
+    public string ProgramDetail6Description2 { get; set; } = "Description2";
+}

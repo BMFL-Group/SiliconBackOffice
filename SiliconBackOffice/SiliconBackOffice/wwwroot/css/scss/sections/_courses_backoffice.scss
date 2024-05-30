@@ -1,29 +1,57 @@
 ﻿.courses {
+
+
     .container-test {
         margin: 0 1rem;
         display: grid;
         grid-template-columns: auto 1fr 1fr;
         grid-template-areas:
-            'main-text main-text main-text' 'course-box course-form course-form' 'aside course-form course-form' '. course-form course-form' '. course-form course-form';
+            /*'page-title page-title page-title' 'aside course-form course-form' 'course-box course-form course-form' '. course-form course-form' '. course-form course-form';*/
+            'page-title page-title page-title' 'aside aside course-box' 'course-form course-form course-form';
         gap: 2rem 10rem;
 
-        .text-center {
-            grid-area: main-text;
+        .page-title {
+            grid-area: page-title;
+
+            .status-wrapper {
+                display: flex;
+                gap: 1rem;
+                
+                .course-status {
+                    background-color: var(--color-success);
+                    border-radius: 0.5rem;
+                    padding: 0.5rem 2rem;
+                }
+            }
         }
 
         .courses-aside {
             grid-area: aside;
+
+            thead {
+                tr {
+                    &:first-child {
+                        border-bottom: 1px solid var(--color-gray-900);
+                    }
+                }
+            }
         }
 
         .grid-item {
             grid-area: course-box;
         }
 
-        .course-form {
+        .course-wrapper {
             grid-area: course-form;
+            margin: 2rem 0;
 
             .load-text {
                 margin: 3rem 0;
+            }
+
+            .button-wrapper {
+                display: flex;
+                gap: 1rem;
             }
         }
 
@@ -203,11 +231,7 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr 1fr;
                 gap: 0 1rem;
-
             }
-/*            what-you-learn {
-                   
-            }*/
 
             .program-details-group {
                 display: block;
@@ -215,7 +239,7 @@
 
                 .form-wrapper {
                     display: grid;
-                    grid-template-columns: 1fr 2fr 3fr;
+                    grid-template-columns: 1fr 6fr 8fr;
                     border-bottom: 1px solid var(--color-gray-500);
                     padding: 0.5rem 0 1rem 0;
 
@@ -224,7 +248,7 @@
                     }
 
                     &:last-child {
-                        margin:0 0 1rem 0;
+                        margin: 0 0 1rem 0;
                     }
 
                     .form-group {

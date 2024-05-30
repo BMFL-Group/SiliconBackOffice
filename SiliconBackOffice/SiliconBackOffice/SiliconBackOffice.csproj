@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="wwwroot\css\scss\sections\_subscribers_backoffice.scss" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,16 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
+    <None Include="wwwroot\css\scss\sections\_subscribers_backoffice.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Pages\Subscribers.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Pages\Subscribers.razor" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\scss\sections\_subscribers_backoffice.scss" />
   </ItemGroup>
 
 </Project>

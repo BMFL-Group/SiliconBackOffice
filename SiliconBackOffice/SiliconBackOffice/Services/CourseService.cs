@@ -18,6 +18,9 @@ public class CourseService
         _configuration = configuration;
     }
 
+    public event Action OnCoursesChange;
+    public void NotifyStateChanged() => OnCoursesChange?.Invoke();
+
     public async Task<CourseResult> GetCourseIdAndTitle()
     {
         try
@@ -278,14 +281,14 @@ public class CourseService
                     }
                 }
             };
-
+            
             var queryJson = JsonConvert.SerializeObject(query);
             var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
 
-            var updateCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:LocalGraphQlBackEnd"]}", content);
-            if (updateCourseResponse.IsSuccessStatusCode)
+            var createCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlBackEnd"]}", content);
+            if (createCourseResponse.IsSuccessStatusCode)
             {
-                var json = await updateCourseResponse.Content.ReadAsStringAsync();
+                var json = await createCourseResponse.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<GraphQLResponse>(json);
                 if (result != null && result.Data != null && result.Data.GetCourseById != null)
                 {
@@ -302,7 +305,6 @@ public class CourseService
         return null!;
 
     }
-
 
     public async Task<Course> UpdateOneCourseAsync(Course course)
     {
@@ -375,5 +377,51 @@ public class CourseService
         }
         catch (Exception ex) { }
         return null!;
+    }
+
+    public async Task<bool> DeleteOneCourseAsync(string id)
+    {
+        try
+        {
+            #region GRAPHQL QUERY
+            //var query = new
+            //{
+            //    query = @"
+            //        mutation ($id: StringInput!) {
+            //            deleteCourse(id: $id) {
+            //                id
+            //                title
+            //            }
+            //        }",
+            //    variables = new
+            //    {
+            //        id = courseId
+            //    }
+            //};
+
+            var query = new
+            {
+                query = @"
+                mutation ($courseId: String!) {
+                    deleteCourse(courseId: $courseId)
+                }",
+                variables = new
+                {
+                    courseId = id
+                }
+            };
+
+            var queryJson = JsonConvert.SerializeObject(query);
+            var content = new StringContent(queryJson, Encoding.UTF8, "application/json");
+
+            var deleteCourseResponse = await _httpClient.PostAsync($"{_configuration["ConnectionStrings:GraphQlBackEnd"]}", content);
+            if (deleteCourseResponse.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            #endregion
+        }
+        catch (Exception ex) { }
+        return false;
     }
 }

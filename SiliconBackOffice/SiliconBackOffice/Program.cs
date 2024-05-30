@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SiliconBackOffice.Client.Pages;
 using SiliconBackOffice.Components;
 using SiliconBackOffice.Components.Account;
 using SiliconBackOffice.Data;
@@ -43,13 +42,15 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<NewsletterService>();
+
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roles = { "Admin", "SuperAdmin", "UltraAdmin" };
+    string[] roles = { "User","Admin", "SuperAdmin", "UltraAdmin" };
 
     for (int index = 0; index < roles.Length; index++)
     {
@@ -74,6 +75,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseStatusCodePagesWithRedirects("/Error");
 app.UseStaticFiles();
 
 app.UseRouting();

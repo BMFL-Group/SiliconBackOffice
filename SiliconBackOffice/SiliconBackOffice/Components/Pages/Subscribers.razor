@@ -1,0 +1,208 @@
+﻿@page "/subscribers"
+@using SiliconBackOffice.Models
+@inject NewsletterService NewsletterService
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<PageTitle>Subscribers</PageTitle>
+
+<section class="subscribers">
+    <div class="container mt-5">
+        <div class="text-center mb-5">
+            <h1>Newsletter Subscribers</h1>
+            <p class="lead">Manage newsletter subscriptions and emails.</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search by email..." class="form-control">
+        </div>
+
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Email</th>
+                    <th scope="col">Daily Newsletter</th>
+                    <th scope="col">Advertising Updates</th>
+                    <th scope="col">Week In Review</th>
+                    <th scope="col">Event Updates</th>
+                    <th scope="col">Startups Weekly</th>
+                    <th scope="col">Podcasts</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (subscribers == null)
+                {
+                    <tr><td colspan="8">Loading...</td></tr>
+                }
+                else
+                {
+                    @foreach (var subscriber in subscribers)
+                    {
+                        <tr>
+                            <td><input type="email" @bind="subscriber.email" class="form-control" /></td>
+                            <td><input type="checkbox" @bind="subscriber.dailyNewsletter" /></td>
+                            <td><input type="checkbox" @bind="subscriber.advertisingUpdates" /></td>
+                            <td><input type="checkbox" @bind="subscriber.weekInReview" /></td>
+                            <td><input type="checkbox" @bind="subscriber.eventUpdates" /></td>
+                            <td><input type="checkbox" @bind="subscriber.startupsWeekly" /></td>
+                            <td><input type="checkbox" @bind="subscriber.podcasts" /></td>
+                            <td>
+                                <button class="btn btn-success" @onclick="() => UpdateSubscriber(subscriber)">Save</button>
+                                <button class="btn btn-danger" @onclick="() => Unsubscribe(subscriber.email)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<style>
+    :root {
+        --primary-color: #4A5568; 
+        --secondary-color: #A0AEC0; 
+        --background-color: #F7FAFC; 
+        --text-color: #2D3748; 
+        --border-color: #E2E8F0; 
+        --input-background: #EDF2F7;
+        --input-border: #CBD5E0; 
+        --input-focus-border: #63B3ED; 
+        --success-color: #3775D5;
+        --danger-color: #F56565; 
+        --btn-hover-lighten: 10%; /
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    h1 {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        color: var(--text-color);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 1rem;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .table thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: var(--input-background);
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--input-border);
+        border-radius: 4px;
+        background-color: var(--input-background);
+    }
+
+        .form-control:focus {
+            border-color: var(--input-focus-border);
+            outline: none;
+        }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-success {
+        margin-left: 5px;
+        margin-bottom: 5px;
+        background-color: var(--success-color);
+        color: white;
+    }
+
+        .btn-success:hover, .btn-success:focus {
+            background-color: #6F96D3;
+        }
+
+    .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+    }
+
+        .btn-danger:hover, .btn-danger:focus {
+            background-color: #F77B7B; 
+            
+        }
+
+    .search-bar {
+        margin-bottom: 1rem;
+    }
+</style>
+@code {
+    private IEnumerable<NewsletterModel> subscribers;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        subscribers = await NewsletterService.GetSubscribersAsync();
+        if (subscribers == null || !subscribers.Any())
+        {
+            Console.WriteLine("No subscribers found.");
+        }
+    }
+
+    private async Task UpdateSubscriber(NewsletterModel subscriber)
+    {
+        var success = await NewsletterService.UpdateSubscriberAsync(subscriber);
+        if (success)
+        {
+            Console.WriteLine("Subscriber updated successfully!");
+        }
+    }
+
+    private async Task Unsubscribe(string email)
+    {
+        bool success = await NewsletterService.UnsubscribeAsync(email);
+        if (success)
+        {
+            subscribers = subscribers.Where(s => s.email != email);
+            StateHasChanged(); // Refresh the UI
+        }
+        else
+        {
+            // Handle failure
+        }
+    }
+
+}
