@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SiliconBackOffice.Components;
 using SiliconBackOffice.Components.Account;
 using SiliconBackOffice.Data;
+using SiliconBackOffice.Hubs;
 using SiliconBackOffice.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,7 @@ builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<NewsletterService>();
 
+builder.Services.AddSignalR();  
 
 var app = builder.Build();
 
@@ -92,5 +94,6 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();
