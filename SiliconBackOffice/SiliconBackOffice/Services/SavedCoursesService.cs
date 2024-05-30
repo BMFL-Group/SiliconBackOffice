@@ -7,16 +7,10 @@ using System.Text;
 
 namespace SiliconBackOffice.Services;
 
-public class SavedCoursesService
+public class SavedCoursesService(HttpClient httpClient, IConfiguration configuration)
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
-
-    public SavedCoursesService(HttpClient httpClient, IConfiguration configuration)
-    {
-        _httpClient = httpClient;
-        _configuration = configuration;
-    }
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly IConfiguration _configuration = configuration;
 
     #region CreateSavedCoursesAsync
     public async Task<SavedCoursesModel> CreateSavedCoursesAsync(SavedCoursesModel savedCourse)
@@ -31,9 +25,10 @@ public class SavedCoursesService
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var createdCourse = JsonConvert.DeserializeObject<SavedCoursesModel>(responseBody);
-
-                // Optionally, return some meaningful result
-                return createdCourse;
+                if (createdCourse != null)
+                {
+                    return createdCourse;
+                }               
             }
         }
         catch (Exception ex)

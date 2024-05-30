@@ -5,17 +5,56 @@ label {
     margin-bottom: 0.5rem;
 }
 
-.find-email {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 2rem;
+input {
+    border-radius: 0.375rem;
+    width: 50%;
+    padding: 0.4rem;
+}
 
-    input {
-        border-radius: 0.375rem;
-        width: 25%;
-        padding: 0.4rem;
+.custom-checkbox {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.find-email-find-input {
+
+    button {
+        margin-top: 1rem;
     }
+}
+
+.find-email-select-input {
+    margin-top: 1rem;
+
+    .dropdown {
+        width: 50%;
+        margin-top: 1rem;
+        text-align: center;
+        font-weight: 700;
+    }
+}
+
+.find-email-select-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .find-email {
+        display: flex;
+        gap: 10px;      
+    }
+}
+
+.find-email-select-btn {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .saved-courses-form {
@@ -27,8 +66,6 @@ label {
         grid-template-columns: 2fr 2fr 1fr;
         grid-gap: 1rem;
         grid-template-areas: "courses users checkboxes";
-
-
 
         .form-group-saved-courses-id, .form-group-saved-users-id {
 
@@ -53,9 +90,11 @@ label {
             grid-area: checkboxes;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
 
             .checkbox-group-form {
+                #has-joined-label {
+                    margin-top: 1.3rem;
+                }
             }
         }
     }
