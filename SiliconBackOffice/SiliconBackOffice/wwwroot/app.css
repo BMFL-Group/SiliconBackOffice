@@ -1262,14 +1262,15 @@ input {
   max-width: 75%;
 }
 #message-page .container .message-container {
-  max-height: 60vh;
+  height: 500px;
   overflow-y: scroll;
+  scroll-behavior: revert;
 }
 #message-page .container .message-container .list-group {
   min-height: 100px;
-  padding: 0 0 0 1rem;
+  padding: 0 0 10rem 1rem;
 }
-#message-page .container .message-container .list-group .message-user-name {
+#message-page .container .message-container .list-group s .message-user-name {
   padding: 0 0 0 1rem;
 }
 #message-page .container .message-container .list-group .message-content {
