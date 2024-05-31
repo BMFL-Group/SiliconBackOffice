@@ -2,7 +2,7 @@
 <PageTitle>Silicon BackOffice | Chat</PageTitle>
 
 @* @attribute [Authorize] *@
-@rendermode InteractiveAuto
+@rendermode InteractiveWebAssembly
 @attribute [StreamRendering]
 
 @inject NavigationManager navigationManager
@@ -11,6 +11,8 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.SignalR.Client
+@using Newtonsoft.Json
+@using SiliconBackOffice.Client.Models
 
 <section id="message-page">
     <div class="container">
@@ -73,14 +75,7 @@
     private string currentMessage;
 
     private ElementReference chatWindow;
-    private const int OverShootAmount = int.MaxValue;
-
-    private class ChatMessage
-    {
-        public string? Message { get; set; }
-        public string? UserName { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;
-    }
+    private const int OverShootAmount = int.MaxValue;   
 
     private async Task NotifyTyping() => await connection!.SendAsync("Typing", userName);
 
@@ -89,7 +84,8 @@
         if (!string.IsNullOrEmpty(currentMessage))
         {
             var message = new ChatMessage { UserName = userName, Message = currentMessage };
-            await connection!.SendAsync("SendMessageToAll", message.UserName, message.Message, message.Created);
+            await connection!.SendAsync("message", message);
+            // await connection!.SendAsync("SendMessageToAll", message.UserName, message.Message, message.Created);
             //messages.Add(message);
 
             currentMessage = "";            
@@ -117,32 +113,71 @@
             userName = "Anonymous";
         }
 
-        connection = new HubConnectionBuilder().WithUrl(navigationManager.ToAbsoluteUri("/chathub")).Build();
+        var negotiateResponse = await FetchNegotiationResponse();
 
-        connection.On<string, string?, string, DateTime>("ReceiveMessage", (fromUser, toUser, message, dateTime) =>
+        if (negotiateResponse != null)
         {
-            var newMessage = new ChatMessage { UserName = fromUser, Message = message };
-            messages.Add(newMessage);         
-            InvokeAsync(StateHasChanged);
-        });
+            connection = new HubConnectionBuilder()
+                .WithUrl(negotiateResponse.ConnectionUrl, options =>
+                {
+                    options.AccessTokenProvider = () => Task.FromResult(negotiateResponse.AccessToken);
+                })
+                .WithAutomaticReconnect()
+                .Build();            
 
-        connection.On<string>("UserTyping", (typingUserName) =>
-        {
-            typingUser = typingUserName;
-            InvokeAsync(StateHasChanged);
 
-            typingTimer?.Stop();
-            typingTimer = new System.Timers.Timer(2000);
-            typingTimer.Elapsed += (s, e) =>
+            connection.On<ChatMessage>("ReceiveMessage", ( chatMessage ) =>
             {
-                typingUser = null;
+                var newMessage = new ChatMessage { UserName = chatMessage.UserName, Message = chatMessage.Message, Created = chatMessage.Created };
+                messages.Add(newMessage);         
                 InvokeAsync(StateHasChanged);
-            };
+            });
 
-            typingTimer.Start();
+            connection.On<string>("UserTyping", (typingUserName) =>
+            {
+                typingUser = typingUserName;
+                InvokeAsync(StateHasChanged);
 
-        });
-        
-        await connection.StartAsync();
+                typingTimer?.Stop();
+                typingTimer = new System.Timers.Timer(2000);
+                typingTimer.Elapsed += (s, e) =>
+                {
+                    typingUser = null;
+                    InvokeAsync(StateHasChanged);
+                };
+
+                typingTimer.Start();
+
+            });
+
+            await connection.StartAsync();
+        }
+    }
+
+    private async Task<MyConnectionInfo> FetchNegotiationResponse()
+    {
+        using var client = new HttpClient();
+        // var response = await client.PostAsync("http://localhost:7247/api/negotiate", null);
+        var response = await client.PostAsync("https://silicon-chatprovider-bmfl.azurewebsites.net/api/negotiate?code=zgByLwv_sM1_kPV3SnL49Rr3e1yp9e2C3FSMPzHpaGMkAzFu2qTinA%3D%3D", null);
+        if (response.IsSuccessStatusCode)
+        {
+            //response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();         
+            return JsonConvert.DeserializeObject<MyConnectionInfo>(content);            
+        }
+        else
+        {
+            return null!;
+        }
+    }
+
+    public class MyConnectionInfo
+    {
+        public string ConnectionUrl { get; set; } = null!;
+        public string AccessToken { get; set; } = null!;
+
+        // public string Url { get; set; }
+
+        // public string AccessToken { get; set; }
     }
 }

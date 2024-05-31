@@ -44,8 +44,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<NewsletterService>();
 
 //builder.Services.AddSignalR();
-
-builder.Services.AddSignalR();
+//builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration.GetConnectionString("AzureSignalRNegotiate"));
+builder.Services.AddSignalR().AddAzureSignalR();
 
 var app = builder.Build();
 
@@ -94,6 +94,12 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
-app.MapHub<ChatHub>("/chathub");
+app.MapHub<ChatHub>("/AzureHub");
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllers();
+//    endpoints.MapHub<ChatHub>("/chathub");
+//});
 
 app.Run();
