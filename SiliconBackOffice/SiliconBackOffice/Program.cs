@@ -45,9 +45,9 @@ builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<NewsletterService>();
 
-//builder.Services.AddSignalR();
+builder.Services.AddSignalR();
 
-builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration.GetConnectionString("AzureSignalRNegotiate"));
+//builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration.GetConnectionString("AzureSignalRNegotiate"));
 
 var app = builder.Build();
 
