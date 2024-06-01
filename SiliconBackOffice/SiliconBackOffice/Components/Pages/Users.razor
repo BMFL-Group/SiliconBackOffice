@@ -1,68 +1,137 @@
-﻿@page "/Users"
+﻿@page "/users"
+@using SiliconBackOffice.Data
+@inject UserService UserService
+@rendermode InteractiveServer
 @attribute [StreamRendering]
+<PageTitle>Silicon BackOffice | Users</PageTitle>
 
-<PageTitle>Users</PageTitle>
+<section class="users">
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1>User Management</h1>
+            <p class="lead">Manage user accounts, roles, and permissions.</p>
+        </div>
 
-<div class="container mt-5">
-    <div class="text-center">
-        <h1>User Management</h1>
-        <p class="lead">Manage user accounts, roles, and permissions.</p>
-    </div>
-
-    <table class="table table-hover mt-4">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Username</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in users)
-            {
+        <table class="table table-hover mt-4">
+            <thead class="thead-dark">
                 <tr>
-                    <td>@user.Id</td>
-                    <td>@user.Username</td>
-                    <td>@user.Email</td>
-                    <td>@user.Role</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" @onclick="() => AssignRole(user)">Assign Role</button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteUser(user)">Delete</button>
-                    </td>
+                    <th scope="col">ID</th>
+                    <th scope="col">Username / Email</th>
+                    <th scope="col">Roles</th>
+                    <th scope="col">Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @if (users == null)
+                {
+                    <tr><td colspan="4">Loading...</td></tr>
+                }
+                else
+                {
+                    foreach (var user in users)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Email</td>
+                            <td>@(userRoles.ContainsKey(user.Id) ? string.Join(", ", userRoles[user.Id]) : "No Roles")</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" @onclick="() => ShowAssignRolePanel(user)">Assign Role</button>    
+                                <button class="btn btn-sm btn-danger" @onclick="() => OnDeleteUser(user)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        @if (isAssignRolePanelVisible)
+        {
+            <div class="side-panel">
+                <h3>Assign Role to @selectedUser?.UserName</h3>
+                <select @bind="newRole" class="form-control mb-2">
+                    @foreach (var role in allRoles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <button class="btn btn-sm btn-primary" @onclick="AssignRoleToSelectedUser">Assign Role</button>
+                <button class="btn btn-sm btn-secondary" @onclick="HideAssignRolePanel">Cancel</button>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+    .side-panel {
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 300px;
+        height: 100%;
+        background-color: white;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+        padding: 20px;
+        z-index: 1000;
+    }
+</style>
 
 @code {
-    private List<User> users = new List<User>
+    private List<ApplicationUser> users = new List<ApplicationUser>();
+    private Dictionary<string, List<string>> userRoles = new Dictionary<string, List<string>>();
+    private List<string> allRoles = new List<string>();
+    private ApplicationUser selectedUser;
+    private string newRole;
+    private bool isAssignRolePanelVisible = false;
+
+    protected override async Task OnInitializedAsync()
     {
-        new User { Id = 1, Username = "Lucas", Email = "Lucas@domain.com", Role = "Admin" },
-        new User { Id = 2, Username = "Björn", Email = "Björn@domain.com", Role = "User" },
-        new User { Id = 2, Username = "Fidde", Email = "Fidde@domain.com", Role = "Moderator" },
-        new User { Id = 2, Username = "Martin", Email = "Martin@domain.com", Role = "User" }
-
-    };
-
-    private void AssignRole(User user)
-    {
-
+        users = await UserService.GetUsersAsync();
+        allRoles = await UserService.GetAllRolesAsync();
+        foreach (var user in users)
+        {
+            userRoles[user.Id] = await UserService.GetRolesAsync(user);
+        }
     }
 
-    private void DeleteUser(User user)
+    private void ShowAssignRolePanel(ApplicationUser user)
     {
-
-        users.Remove(user);
+        selectedUser = user;
+        isAssignRolePanelVisible = true;
     }
 
-    private class User
+    private void HideAssignRolePanel()
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
+        isAssignRolePanelVisible = false;
+    }
+
+    private async Task AssignRoleToSelectedUser()
+    {
+        if (selectedUser != null && !string.IsNullOrWhiteSpace(newRole))
+        {
+            var success = await UserService.UpdateUserRoleAsync(selectedUser, newRole);
+            if (success)
+            {
+                userRoles[selectedUser.Id] = new List<string> { newRole };
+                HideAssignRolePanel();
+            }
+        }
+    }
+
+    private async Task RemoveRolesFromUser(ApplicationUser user)
+    {
+        var success = await UserService.RemoveAllUserRolesAsync(user);
+        if (success)
+        {
+            userRoles[user.Id] = new List<string>(); 
+        }
+    }
+
+    private async Task OnDeleteUser(ApplicationUser user)
+    {
+        var success = await UserService.DeleteUser(user);
+        if (success)
+        {
+            users.Remove(user); 
+        }
     }
 }

@@ -1,72 +1,104 @@
 ﻿@page "/courses"
+
+@rendermode InteractiveServer
 @attribute [StreamRendering]
+@attribute [Authorize]
 
-<PageTitle>Courses</PageTitle>
+<PageTitle>Silicon BackOffice | Courses</PageTitle>
 
-<div class="container mt-5">
-    <div class="text-center">
-        <h1>Courses Management</h1>
-        <p class="lead">Manage courses, descriptions, content, and categories.</p>
-    </div>
+<section id="coursesStart" class="courses">
+    <div class="container-test">
+        <div class="page-title">
+            <h1>Courses Management</h1>
+            <p class="lead">Manage courses, descriptions, content, and categories.</p>
 
-    <table class="table table-hover mt-4">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Course Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Includes</th>
-                <th scope="col">Category</th>
-                <th scope="col">Content</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var course in courses)
-            {
+            <div class="status-wrapper">
+                <button class="btn btn-theme" @onclick="CreateNewcCourse">Create New Course</button>
+                @if (_statusMessage != null)
+                {
+                    <div class="course-status btn btn-success">@_statusMessage</div>
+                }
+            </div>
+        </div>
+
+
+        <table class="table table-hover courses-aside">
+            <thead class="thead-dark">
                 <tr>
-                    <td>@course.Id</td>
-                    <td>@course.CourseName</td>
-                    <td>@course.Description</td>
-                    <td>@course.Includes</td>
-                    <td>@course.Category</td>
-                    <td>@course.Content</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" @onclick="() => EditCourse(course)">Edit</button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteCourse(course)">Delete</button>
-                    </td>
+                    <th scope="col">Course Name</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            
+
+            <tbody>
+                @if (_courses == null)
+                {
+                    <div>Loading...</div>
+                }
+                else
+                {
+                    @foreach (var course in _courses)
+                    {
+                        <tr>
+                            <td>@course.Title</td>    
+                            <td>
+                                <button class="btn btn-sm btn-primary" @onclick="() => EditCourse(course)">View/Edit</button>                                
+                            </td>
+                        </tr>
+                    }
+                }                
+            </tbody>
+        </table>
+
+        <_CoursesBox _course="_courseById" />
+
+        <_CoursesForm _course="_formCourse" OnNotifyParent="HandleNotification" />
+                
+    </div>
+</section>
 
 @code {
-    private List<Course> courses = new List<Course>
+    private IEnumerable<Course> _courses { get; set; } = [];
+    private Course? _courseById { get; set; }
+    private FormCourseModel? _formCourse { get; set; }
+    private IEnumerable<CategoryModel> _categories { get; set; } = [];
+
+    [SupplyParameterFromQuery]
+    public string? _statusMessage { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
     {
-        new Course { Id = 1, CourseName = "Introduction to C#", Description = "Learn the basics of C#", Includes = "Videos, PDFs", Category = "Programming", Content = "Basics, Syntax, OOP" },
-        new Course { Id = 2, CourseName = "Advanced Blazor", Description = "Master Blazor framework", Includes = "Videos, Code Samples", Category = "Web Development", Content = "Components, Data Binding, Services" }
-
-    };
-
-    private void EditCourse(Course course)
-    {
-
+        var result = await _courseService.GetAllCoursesAsync("", "", 1, 999);
+        if (result != null)
+        {
+            _courses = result.Courses;            
+        }
+        _formCourse = null!;
+        _courseById = null!;
     }
 
-    private void DeleteCourse(Course course)
+    private async Task EditCourse(Course course)
     {
-
-        courses.Remove(course);
+        _statusMessage = null!;
+        var result = await _courseService.GetOneCourseByIdAsync(course.Id);
+        if (result != null)
+        {
+            _courseById = result;
+            _formCourse = CourseFactory.ConvertToFormCourse(result);
+        }
     }
 
-    private class Course
+    public void CreateNewcCourse()
     {
-        public int Id { get; set; }
-        public string CourseName { get; set; }
-        public string Description { get; set; }
-        public string Includes { get; set; }
-        public string Category { get; set; }
-        public string Content { get; set; }
+        _statusMessage = null!;
+        _courseById = new();
+        _formCourse = new();
+        navigationManager.NavigateTo(navigationManager.BaseUri + "courses#courseForm");
+    }
+
+    public void HandleNotification()
+    {
+        EditCourse(_courseById);
     }
 }

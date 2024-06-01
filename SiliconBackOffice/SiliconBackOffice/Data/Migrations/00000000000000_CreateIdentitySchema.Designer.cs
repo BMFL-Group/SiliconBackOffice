@@ -9,7 +9,7 @@ using System;
 
 #nullable disable
 
-namespace SiliconBackOffice.Migrations
+namespace Sillicon_BlazorApp_IA.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]
@@ -25,7 +25,7 @@ namespace SiliconBackOffice.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SiliconBackOffice.Data.ApplicationUser", b =>
+            modelBuilder.Entity("Sillicon_BlazorApp_IA.Data.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -234,7 +234,7 @@ namespace SiliconBackOffice.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SiliconBackOffice.Data.ApplicationUser", null)
+                    b.HasOne("Sillicon_BlazorApp_IA.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -243,7 +243,7 @@ namespace SiliconBackOffice.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SiliconBackOffice.Data.ApplicationUser", null)
+                    b.HasOne("Sillicon_BlazorApp_IA.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -258,7 +258,7 @@ namespace SiliconBackOffice.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SiliconBackOffice.Data.ApplicationUser", null)
+                    b.HasOne("Sillicon_BlazorApp_IA.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -267,7 +267,7 @@ namespace SiliconBackOffice.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SiliconBackOffice.Data.ApplicationUser", null)
+                    b.HasOne("Sillicon_BlazorApp_IA.Data.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

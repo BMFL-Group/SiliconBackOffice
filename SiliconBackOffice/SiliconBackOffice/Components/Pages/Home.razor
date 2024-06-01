@@ -1,10 +1,11 @@
 ﻿@page "/"
+@attribute [Authorize]
 
 <PageTitle>Silicon BackOffice</PageTitle>
 
 <div class="container mt-5">
     <div class="text-center">
-        <img src="images/logo.png" alt="Silicon Logo" class="mb-4 logo" />
+        <img src="img/IconLight.svg" alt="Silicon Logo" class="mb-4 logo" />
         <h1>Welcome to Silicon BackOffice</h1>
         <p class="lead">Backoffice system for moderating courses, users, and more.</p>
     </div>
@@ -16,6 +17,15 @@
                     <h5 class="card-title">Manage Courses</h5>
                     <p class="card-text">Create, update, and delete courses with ease.</p>
                     <a href="/courses" class="btn btn-primary">Go to Courses</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage User Saved Courses</h5>
+                    <p class="card-text">Hande User Saved Courses.</p>
+                    <a href="/savedcourses" class="btn btn-primary">Go to Saved Courses</a>
                 </div>
             </div>
         </div>
@@ -37,10 +47,20 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Subscribers</h5>
+                    <p class="card-text">See all subscribers, update and delete.</p>
+                    <a href="/subscribers" class="btn btn-primary">Go to subscribers</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
+    
     .container {
         max-width: 1000px;
     }
