@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using SiliconBackOffice.Components;
 using SiliconBackOffice.Components.Account;
@@ -13,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+//builder.Services.AddRazorPages();
 
 builder.Services.AddHttpClient();
 
@@ -45,9 +48,15 @@ builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<NewsletterService>();
 
-builder.Services.AddSignalR();
-
+//builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddAzureSignalR();
 //builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration.GetConnectionString("AzureSignalRNegotiate"));
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+          new[] { "application/octet-stream" });
+});
+
 
 var app = builder.Build();
 
@@ -93,9 +102,18 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(SiliconBackOffice.Client._Imports).Assembly);
+app.MapHub<BlazorChatSampleHub>(BlazorChatSampleHub.HubUrl);
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapBlazorHub();
+//    endpoints.MapHub<BlazorChatSampleHub>(BlazorChatSampleHub.HubUrl);
+//    //endpoints.MapRazorPages();
+//    //endpoints.MapFallbackToPage("/Error");
+//});
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
-app.MapHub<ChatHub>("/chathub");
+//app.MapHub<ChatHub>("/chathub");
 
 app.Run();
